@@ -4,12 +4,6 @@ import 'result_page.dart';
 import 'grid_square.dart';
 import 'dart:math';
 
-String getRandomNumber () {
-  int randomNumber = Random().nextInt(2);
-
-  return randomNumber.toString();
-}
-
 enum Activated {
   on,
   off,
@@ -26,30 +20,31 @@ class _TaskPageState extends State<TaskPage> {
   Color squareColor;
 
 
-  List<String> colorKeys = ['y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y','y',];
-
+  Map<int, int> gridMap  = {0: 0, 1: 0, 2: 0, 3: 0, 4:0,5:0, 6: 0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0,
+    13:0, 14:0, 15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0};
 
   int selectedIndex = 0;
   int yellowCount = 0;
   int blueCount = 0;
+  int pressCount = 0;
+
+  //to keep squares certain color, try making random int either 1 or 2 so that 0=gray and 1= yellow and 2=blue
 
   onSelected (int index) {
     setState(() => selectedIndex = index);
   }
 
-  Color getSquareColor () {
-    int randomNumber = Random().nextInt(2);
-    if (randomNumber == 0) {
-      squareColor = Colors.yellow;
+  void getSquareColor (int index) {
+    int randomNumber = Random().nextInt(2) + 1;
+    print(randomNumber);
+    if (randomNumber == 1) {
+      gridMap.update(index, (int randomNumber) => 1);
       yellowCount++;
-      activated = Activated.on;
-      return squareColor;
+
     }
-    else  {
-      squareColor = Colors.blue;
+    else if (randomNumber == 2) {
+      gridMap.update(index, (int randomNumber) => 2);
       blueCount++;
-      activated = Activated.on;
-      return squareColor;
     }
   }
 
@@ -61,14 +56,24 @@ class _TaskPageState extends State<TaskPage> {
         title: Text(''),
       ),
       body: GridView.builder(
-        itemCount: colorKeys.length,
+        itemCount: gridMap.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 5),
         itemBuilder: (context, index) => GridSquare(
-          color: selectedIndex != null && selectedIndex == index && activated == Activated.on ? getSquareColor() : kUnpressedColor,
+          color: gridMap[index] != 0 ? squareColor : kUnpressedColor,
           onPress: () {
             setState(() {
               onSelected(index);
+              getSquareColor(index);
+              if (gridMap[index] == 1) {
+                squareColor = Colors.yellow;
+              }
+              else if (gridMap[index] == 2) {
+                squareColor = Colors.blue;
+              }
+              else if (gridMap[index] == 0){
+                squareColor = Colors.grey;
+              }
             },);
           },
         ),
@@ -81,29 +86,6 @@ class _TaskPageState extends State<TaskPage> {
         SizedBox(
           height: 50.0,
         ),
-        Expanded(
-          child: GridView.count(
-        crossAxisCount: 5,
-        children: colorKeys.map((String colorCode) {
-          return GridTile(
-            child: GridSquare(
-              onPress: (){
-                setState(() {
-                  for(int i = 0; i < colorKeys.length; i++){
-                    if(i == 1){
-                      activated = Activated.on;
-                      print('this worked');
-                    }
-                    else {
-                      activated = Activated.off;
-                      print('this didnt work');}
-                  }
-                });
-                },
-              color: activated == Activated.on ? kPressedColor : kUnpressedColor,
-    ),);
-    }).toList()),
-    ),
 
         FlatButton(
           child: Text(''),
