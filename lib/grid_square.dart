@@ -8,8 +8,6 @@ class GridSquare extends StatefulWidget {
   final Color color;
   final Function onPress;
 
-  Activated activated = Activated.off;
-
   @override
   _GridSquareState createState() => _GridSquareState();
 }

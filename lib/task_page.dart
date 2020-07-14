@@ -4,10 +4,6 @@ import 'result_page.dart';
 import 'grid_square.dart';
 import 'dart:math';
 
-enum Activated {
-  on,
-  off,
-}
 
 class TaskPage extends StatefulWidget {
   @override
@@ -16,9 +12,7 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
 
-  Activated activated = Activated.off;
   Color squareColor;
-
 
   Map<int, int> gridMap  = {0: 0, 1: 0, 2: 0, 3: 0, 4:0,5:0, 6: 0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0,
     13:0, 14:0, 15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0};
@@ -28,7 +22,7 @@ class _TaskPageState extends State<TaskPage> {
   int blueCount = 0;
   int pressCount = 0;
 
-  //to keep squares certain color, try making random int either 1 or 2 so that 0=gray and 1= yellow and 2=blue
+  List<bool> openedSquares;
 
   onSelected (int index) {
     setState(() => selectedIndex = index);
@@ -48,6 +42,19 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
+  void initList () {
+    openedSquares = List.generate(gridMap.length, (i) {
+      return false;
+  });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initList();
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,24 +66,28 @@ class _TaskPageState extends State<TaskPage> {
         itemCount: gridMap.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 5),
-        itemBuilder: (context, index) => GridSquare(
-          color: gridMap[index] != 0 ? squareColor : kUnpressedColor,
-          onPress: () {
-            setState(() {
-              onSelected(index);
-              getSquareColor(index);
-              if (gridMap[index] == 1) {
-                squareColor = Colors.yellow;
-              }
-              else if (gridMap[index] == 2) {
-                squareColor = Colors.blue;
-              }
-              else if (gridMap[index] == 0){
-                squareColor = Colors.grey;
-              }
-            },);
-          },
-        ),
+        itemBuilder: (context, index) {
+          if(openedSquares[index] == false){
+            squareColor = Colors.grey;
+          }
+          else{
+            if (gridMap[index] == 1) {
+              squareColor = Colors.yellow;
+            }
+            else if (gridMap[index] == 2) {
+              squareColor = Colors.blue;
+            }
+          }
+          return GridSquare(
+            color: squareColor,
+            onPress: () {
+              setState(() {
+                getSquareColor(index);
+                openedSquares[index] = true;
+              },);
+            },
+          );
+        }
       ),
 
 
