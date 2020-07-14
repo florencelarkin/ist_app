@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'constants.dart';
 import 'result_page.dart';
 import 'grid_square.dart';
 import 'dart:math';
@@ -22,17 +21,17 @@ class _TaskPageState extends State<TaskPage> {
 
   List<bool> openedSquares;
 
-  void getSquareColor (int index) {
-    int randomNumber = Random().nextInt(2) + 1;
-    print(randomNumber);
-    if (randomNumber == 1) {
-      gridMap.update(index, (int randomNumber) => 1);
-      yellowCount++;
-
-    }
-    else if (randomNumber == 2) {
-      gridMap.update(index, (int randomNumber) => 2);
-      blueCount++;
+  void getSquareColor () {
+    for (var i = 0; i < gridMap.length; i++) {
+      int randomNumber = Random().nextInt(2) + 1;
+      if (randomNumber == 1) {
+        gridMap.update(i, (int randomNumber) => 1);
+        yellowCount++;
+      }
+      else if (randomNumber == 2) {
+        gridMap.update(i, (int randomNumber) => 2);
+        blueCount++;
+      }
     }
   }
 
@@ -46,6 +45,7 @@ class _TaskPageState extends State<TaskPage> {
   void initState() {
     super.initState();
     initList();
+    getSquareColor();
   }
 
 
@@ -76,8 +76,9 @@ class _TaskPageState extends State<TaskPage> {
             color: squareColor,
             onPress: () {
               setState(() {
-                getSquareColor(index);
-                openedSquares[index] = true;
+                if(openedSquares[index] == false){
+                  openedSquares[index] = true;}
+                else {}
               },);
             },
           );
