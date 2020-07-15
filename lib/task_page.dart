@@ -20,8 +20,10 @@ class _TaskPageState extends State<TaskPage> {
   int blueCount = 0;
   bool blueMajority;
   bool yellowMajority;
+  int pressCount = 0;
+  String majorityChoice;
 
-  List<bool> openedSquares;
+  List<bool> flippedSquares;
 
   void getSquareColor () {
     for (var i = 0; i < 25; i++) {
@@ -37,17 +39,32 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
-  void getCorrectMajority(int yellowCount, int blueCount, String majorityChoice) {
-    if (yellowCount > blueCount) {
-      blueMajority = false;
+  void getCorrectMajority(String majorityChoice) {
+    if (majorityChoice == 'yellow'){
+      if (yellowCount > blueCount) {
+        yellowMajority = true;
+        print('you are correct! the majority is yellow');
+      }
+      else {
+        yellowMajority = false;
+        print('you are wrong:(');
+      }
     }
-    else {
-      blueMajority = true;
+    else if (majorityChoice == 'blue') {
+      if (blueCount > yellowCount) {
+        blueMajority = true;
+        print('you are correct! the majority is blue');
+      }
+      else {
+        blueMajority = false;
+        print('you are wrong:(');
+      }
     }
+
   }
 
   void initList () {
-    openedSquares = List.generate(gridMap.length, (i) {
+    flippedSquares = List.generate(gridMap.length, (i) {
       return false;
   });
   }
@@ -74,7 +91,7 @@ class _TaskPageState extends State<TaskPage> {
             crossAxisCount: 5),
         itemBuilder: (context, index) {
             if (index < 25) {
-              if (openedSquares[index] == false) {
+              if (flippedSquares[index] == false) {
                 squareColor = Colors.grey;
               }
               else {
@@ -96,17 +113,22 @@ class _TaskPageState extends State<TaskPage> {
               squareColor = Colors.blue;
             }
 
+
           return GridSquare(
             color: squareColor,
             onPress: () {
               setState(() {
-                if(openedSquares[index] == false && index < 25){
-                  openedSquares[index] = true;}
+                if(flippedSquares[index] == false && index < 25){
+                  pressCount++;
+                  flippedSquares[index] = true;}
                 else if (index == 31) {
-
+                  majorityChoice = 'yellow';
+                  getCorrectMajority(majorityChoice);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(),),);
                 }
                 else if (index == 33) {
+                  majorityChoice = 'blue';
+                  getCorrectMajority(majorityChoice);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(),),);
                 }
                 else {}
@@ -115,42 +137,6 @@ class _TaskPageState extends State<TaskPage> {
           );
         }
       ),
-
-
-
-    );/*Column(
-      children: <Widget>[
-        SizedBox(
-          height: 50.0,
-        ),
-
-        FlatButton(
-          child: Text(''),
-          padding: const EdgeInsets.only(left: double.infinity, right: double.infinity, top: 40.0, ),
-          color: Colors.yellow,
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(),
-            ),
-            );
-          },
-        ),
-        SizedBox(
-          height: 10.0,
-        ),
-        FlatButton(
-          child: Text(''),
-          padding: const EdgeInsets.only(left: double.infinity, right: double.infinity, top: 40.0),
-          color: Colors.blue,
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(),
-            ),
-            );
-          },
-        ),
-        SizedBox(
-          height: 40.0,
-        ),
-    ],
-    );*/
+    );
   }
 }

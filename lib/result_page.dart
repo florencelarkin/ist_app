@@ -6,7 +6,6 @@ class ResultPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
             child: Container(
@@ -14,14 +13,29 @@ class ResultPage extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 'You Win!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50.0,
+                ),
               ),
             ),
           ),
           FlatButton(
-            child: Text('RESTART'),
+            color: Colors.white,
+            padding: EdgeInsets.only(top: 30.0, bottom: 30.0, left: 50.0, right: 50.0),
+            child: Text(
+              'RESTART',
+            style: TextStyle(
+              fontSize: 25.0,
+              color: Color(0xFF0A0E21),
+            ),
+            ),
             onPressed: (){
               Navigator.pop(context);
             },
+          ),
+          SizedBox(
+            height: 150.0,
           ),
         ],
       ),
