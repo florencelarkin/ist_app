@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'result_page.dart';
-import 'grid_square.dart';
+import 'package:istapp/result_page.dart';
+import 'package:istapp/grid_square.dart';
 import 'dart:math';
 
 

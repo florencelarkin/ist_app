@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:istapp/task_page.dart';
 
 class ResultPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Points: '),),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -31,7 +33,7 @@ class ResultPage extends StatelessWidget {
             ),
             ),
             onPressed: (){
-              Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(),),);
             },
           ),
           SizedBox(
