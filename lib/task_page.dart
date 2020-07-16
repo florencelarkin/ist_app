@@ -39,26 +39,32 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
-  void getCorrectMajority(String majorityChoice) {
+  String getCorrectMajority(String majorityChoice) {
+    String result;
     if (majorityChoice == 'yellow'){
       if (yellowCount > blueCount) {
-        yellowMajority = true;
-        print('you are correct! the majority is yellow');
+        result = 'You win!';
+        return result;
+
       }
       else {
         yellowMajority = false;
-        print('you are wrong:(');
+        result = 'You lose';
+        return result;
       }
     }
     else if (majorityChoice == 'blue') {
       if (blueCount > yellowCount) {
-        blueMajority = true;
-        print('you are correct! the majority is blue');
+        result = 'You win!';
+        return result;
       }
       else {
-        blueMajority = false;
-        print('you are wrong:(');
+        result = 'You lose';
+        return result;
       }
+    }
+    else {
+      return null;
     }
 
   }
@@ -123,13 +129,13 @@ class _TaskPageState extends State<TaskPage> {
                   flippedSquares[index] = true;}
                 else if (index == 31) {
                   majorityChoice = 'yellow';
-                  getCorrectMajority(majorityChoice);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(),),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
+                    resultText: getCorrectMajority(majorityChoice)),),);
                 }
                 else if (index == 33) {
                   majorityChoice = 'blue';
-                  getCorrectMajority(majorityChoice);
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(),),);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
+                    resultText: getCorrectMajority(majorityChoice)),),);
                 }
                 else {}
               },);

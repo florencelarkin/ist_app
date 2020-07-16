@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:istapp/task_page.dart';
 
 class ResultPage extends StatelessWidget {
+  ResultPage({@required this.resultText});
+
+  final String resultText;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +18,7 @@ class ResultPage extends StatelessWidget {
               padding: EdgeInsets.all(15.0),
               alignment: Alignment.center,
               child: Text(
-                'You Win!',
+                resultText,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 50.0,
