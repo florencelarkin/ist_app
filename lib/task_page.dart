@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:istapp/result_page.dart';
 import 'package:istapp/grid_square.dart';
 import 'dart:math';
+import 'dart:core';
 
 
 class TaskPage extends StatefulWidget {
@@ -13,6 +14,8 @@ class _TaskPageState extends State<TaskPage> {
 
   Color squareColor;
 
+  Stopwatch stopwatch = new Stopwatch()..start();
+
   Map<int, int> gridMap  = {0: 0, 1: 0, 2: 0, 3: 0, 4:0,5:0, 6: 0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0,
     13:0, 14:0, 15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:3, 26:3, 27:3,28:3, 29:3, 30:3, 31:1, 32:3, 33:2, 34:3};
 
@@ -22,6 +25,7 @@ class _TaskPageState extends State<TaskPage> {
   bool yellowMajority;
   int pressCount = 0;
   String majorityChoice;
+  int elapsedTime = 0;
 
   List<bool> flippedSquares;
 
@@ -80,6 +84,7 @@ class _TaskPageState extends State<TaskPage> {
     super.initState();
     initList();
     getSquareColor();
+
   }
 
 
@@ -88,7 +93,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: Text('Wins: '),
       ),
       body: GridView.builder(
           physics: NeverScrollableScrollPhysics(),
@@ -123,16 +128,25 @@ class _TaskPageState extends State<TaskPage> {
           return GridSquare(
             color: squareColor,
             onPress: () {
+
               setState(() {
                 if(flippedSquares[index] == false && index < 25){
                   pressCount++;
                   flippedSquares[index] = true;}
                 else if (index == 31) {
+                  stopwatch.stop();
+                  elapsedTime = stopwatch.elapsedMilliseconds;
+                  print(elapsedTime);
+                  stopwatch.reset();
                   majorityChoice = 'yellow';
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
                     resultText: getCorrectMajority(majorityChoice)),),);
                 }
                 else if (index == 33) {
+                  stopwatch.stop();
+                  elapsedTime = stopwatch.elapsedMilliseconds;
+                  print(elapsedTime);
+                  stopwatch.reset();
                   majorityChoice = 'blue';
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
                     resultText: getCorrectMajority(majorityChoice)),),);
