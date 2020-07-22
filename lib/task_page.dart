@@ -21,8 +21,6 @@ class _TaskPageState extends State<TaskPage> {
 
   int yellowCount = 0;
   int blueCount = 0;
-  bool blueMajority;
-  bool yellowMajority;
   int pressCount = 0;
   String majorityChoice;
   int elapsedTime = 0;
@@ -52,7 +50,6 @@ class _TaskPageState extends State<TaskPage> {
 
       }
       else {
-        yellowMajority = false;
         result = 'You lose';
         return result;
       }
@@ -149,7 +146,7 @@ class _TaskPageState extends State<TaskPage> {
                   stopwatch.reset();
                   majorityChoice = 'blue';
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
-                    resultText: getCorrectMajority(majorityChoice)),),);
+                    resultText: getCorrectMajority(majorityChoice)), ),);
                 }
                 else {}
               },);

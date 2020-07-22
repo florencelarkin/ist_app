@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'task_page.dart';
+import 'task_page_v2.dart';
 
 class Instructions extends StatefulWidget {
   @override
@@ -30,21 +31,42 @@ class _InstructionsState extends State<Instructions> {
           SizedBox(
             height: 100.0,
           ),
-          FlatButton(
-            color: Colors.white,
-            child: Text(
-              'Click to Begin',
-              style: TextStyle(
-                fontSize: 25.0,
-                color: Color(0xFF0A0E21),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              FlatButton(
+                color: Colors.white,
+                child: Text(
+                  'Version 1',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Color(0xFF0A0E21),
+                  ),
+                ),
+                padding: EdgeInsets.all(30.0),
+                onPressed: () {
+                  setState(() {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(),),);
+                  });
+              },
               ),
-            ),
-            padding: EdgeInsets.all(30.0),
-            onPressed: () {
-              setState(() {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(),),);
-              });
-          },
+              FlatButton(
+                color: Colors.white,
+                child: Text(
+                  'Version 2',
+                  style: TextStyle(
+                    fontSize: 25.0,
+                    color: Color(0xFF0A0E21),
+                  ),
+                ),
+                padding: EdgeInsets.all(30.0),
+                onPressed: () {
+                  setState(() {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPagev2(),),);
+                  });
+                },
+              ),
+            ],
           ),
           SizedBox(
             height: 100.0,
