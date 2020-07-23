@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:istapp/task_page.dart';
 
 class ResultPage extends StatelessWidget {
-  ResultPage({@required this.resultText});
+  ResultPage({@required this.resultText, this.wins});
 
   final String resultText;
+  final int wins;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(''),),
+      appBar: AppBar(title: Text('Wins: $wins'),),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[

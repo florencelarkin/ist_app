@@ -21,7 +21,7 @@ class _InstructionsState extends State<Instructions> {
               padding: EdgeInsets.all(15.0),
               alignment: Alignment.center,
               child: Text(
-                'In this task your goal is to figure out whether there is a majority of blue or yellow squares. To reveal the squares in the grid, tap on them. When you are ready to choose which color you think is the majority, press the yellow button for yellow or the blue button for blue.',
+                'In this task your goal is to figure out whether there is a majority of blue or yellow squares. To reveal the squares in the grid, tap on them. When you are ready to choose which color you think is the majority, press the yellow button for yellow or the blue button for blue. In version 1, you can click as many squares as you want without penalty. In version 2, your points decreases for each square you click.',
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
@@ -37,9 +37,9 @@ class _InstructionsState extends State<Instructions> {
               FlatButton(
                 color: Colors.white,
                 child: Text(
-                  'Fixed Win',
+                  'Version 1',
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 20.0,
                     color: Color(0xFF0A0E21),
                   ),
                 ),
@@ -53,9 +53,9 @@ class _InstructionsState extends State<Instructions> {
               FlatButton(
                 color: Colors.white,
                 child: Text(
-                  'Decreasing Points',
+                  'Version 2',
                   style: TextStyle(
-                    fontSize: 25.0,
+                    fontSize: 20.0,
                     color: Color(0xFF0A0E21),
                   ),
                 ),

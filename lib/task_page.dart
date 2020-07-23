@@ -4,8 +4,8 @@ import 'package:istapp/grid_square.dart';
 import 'dart:math';
 import 'dart:core';
 
-
 class TaskPage extends StatefulWidget {
+
   @override
   _TaskPageState createState() => _TaskPageState();
 }
@@ -24,6 +24,7 @@ class _TaskPageState extends State<TaskPage> {
   int pressCount = 0;
   String majorityChoice;
   int elapsedTime = 0;
+
 
   List<bool> flippedSquares;
 
@@ -61,6 +62,7 @@ class _TaskPageState extends State<TaskPage> {
       }
       else {
         result = 'You lose';
+
         return result;
       }
     }
@@ -90,7 +92,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wins: '),
+        title: Text(''),
       ),
       body: GridView.builder(
           physics: NeverScrollableScrollPhysics(),
