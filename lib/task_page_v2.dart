@@ -26,7 +26,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
   int pressCount = 0;
   String majorityChoice;
   int elapsedTime = 0;
-  int points = 500;
+  int points = 250;
 
   List<bool> flippedSquares;
 
@@ -49,25 +49,25 @@ class _TaskPagev2State extends State<TaskPagev2> {
     if (majorityChoice == 'yellow'){
       if (yellowCount > blueCount) {
         result = 'You win!';
-        points = points + 300;
+        points = points + 100;
         return result;
 
       }
       else {
         result = 'You lose';
-        points = 0;
+        points = points - 100;
         return result;
       }
     }
     else if (majorityChoice == 'blue') {
       if (blueCount > yellowCount) {
         result = 'You win!';
-        points = points + 300;
+        points = points + 100;
         return result;
       }
       else {
         result = 'You lose';
-        points = 0;
+        points = points - 100;
         return result;
       }
     }
@@ -134,7 +134,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
                 setState(() {
                   if(flippedSquares[index] == false && index < 25){
                     pressCount++;
-                    points = points - 50;
+                    points = points - 10;
                     flippedSquares[index] = true;}
                   else if (index == 31) {
                     majorityChoice = 'yellow';

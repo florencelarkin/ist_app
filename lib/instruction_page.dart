@@ -37,7 +37,7 @@ class _InstructionsState extends State<Instructions> {
               FlatButton(
                 color: Colors.white,
                 child: Text(
-                  'Version 1',
+                  'Fixed Win',
                   style: TextStyle(
                     fontSize: 25.0,
                     color: Color(0xFF0A0E21),
@@ -53,7 +53,7 @@ class _InstructionsState extends State<Instructions> {
               FlatButton(
                 color: Colors.white,
                 child: Text(
-                  'Version 2',
+                  'Decreasing Points',
                   style: TextStyle(
                     fontSize: 25.0,
                     color: Color(0xFF0A0E21),
