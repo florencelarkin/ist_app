@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:istapp/result_page_v2.dart';
 import 'package:istapp/grid_square.dart';
 import 'dart:math';
 import 'dart:core';
+import 'package:http/http.dart' as http;
 
 
 class TaskPagev2 extends StatefulWidget {
@@ -29,6 +31,29 @@ class _TaskPagev2State extends State<TaskPagev2> {
   int points = 250;
 
   List<bool> flippedSquares;
+
+  Future<http.Response> createData(String title) {
+    return http.post(
+      'https://jsonplaceholder.typicode.com/albums',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'title': title,
+        'experiment': 'IST',
+        'version' : '1.0',
+        'modality' : 'mobile',
+        'subjID' : 'placeholder',
+        'date' : 'current date',
+        'time' : 'current time',
+        'study' : 'placeholder',
+        'timeElapsed': 'placeholder',
+        'pattern': 'placeholder',
+        'pressCount': '0',
+        'pressTimestamp' : 'placeholder'
+      }),
+    );
+  }
 
   void getSquareColor () {
     for (var i = 0; i < 25; i++) {
