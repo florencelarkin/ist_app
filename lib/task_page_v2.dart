@@ -32,25 +32,24 @@ class _TaskPagev2State extends State<TaskPagev2> {
 
   List<bool> flippedSquares;
 
-  Future<http.Response> createData(String title) {
+  Future<http.Response> createData(String timeElapsed, Map pattern, int pressCount, Map pressTimes, String date, String time) {
     return http.post(
       'https://jsonplaceholder.typicode.com/albums',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, String>{
-        'title': title,
+      body: jsonEncode(<String, dynamic>{
         'experiment': 'IST',
         'version' : '1.0',
         'modality' : 'mobile',
-        'subjID' : 'placeholder',
-        'date' : 'current date',
-        'time' : 'current time',
-        'study' : 'placeholder',
-        'timeElapsed': 'placeholder',
-        'pattern': 'placeholder',
-        'pressCount': '0',
-        'pressTimestamp' : 'placeholder'
+        'subjID' : '0',
+        'date' : date,
+        'time' : time,
+        'study' : 'test',
+        'timeElapsed': timeElapsed,
+        'pattern': pattern,
+        'pressCount': pressCount,
+        'pressTimestamp' : pressTimes
       }),
     );
   }
