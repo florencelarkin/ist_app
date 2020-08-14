@@ -21,15 +21,19 @@ class _TaskPageState extends State<TaskPage> {
   Map<int, int> gridMap  = {0: 0, 1: 0, 2: 0, 3: 0, 4:0,5:0, 6: 0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0,
     13:0, 14:0, 15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:3, 26:3, 27:3,28:3, 29:3, 30:3, 31:1, 32:3, 33:2, 34:3};
 
+  Map<int, dynamic> pressTimes= {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 21:0, 22:0,
+    23:0, 24:0};
+
   int yellowCount = 0;
   int blueCount = 0;
   int pressCount = 0;
   String majorityChoice;
   int elapsedTime = 0;
+  var now = new DateTime.now();
 
   List<bool> flippedSquares;
 
-  Future<http.Response> createData(String timeElapsed, Map pattern, int pressCount, Map pressTimes, String date, String time) {
+  Future<http.Response> createData(int timeElapsed, Map pattern, int pressCount, Map pressTimes, dynamic date) async {
     return http.post(
       'https://jsonplaceholder.typicode.com/albums',
       headers: <String, String>{
@@ -37,16 +41,15 @@ class _TaskPageState extends State<TaskPage> {
       },
       body: jsonEncode(<String, dynamic>{
         'experiment': 'IST',
-        'version' : '1.0',
+        'version' : '2.0',
         'modality' : 'mobile',
-        'subjID' : '0',
-        'date' : date,
-        'time' : time,
+        'subjID' : 'name',
         'study' : 'test',
+        'date' : date,
         'timeElapsed': timeElapsed,
         'pattern': pattern,
         'pressCount': pressCount,
-        'pressTimestamp' : pressTimes
+        'pressTimestamp' : pressTimes,
       }),
     );
   }
@@ -152,7 +155,15 @@ class _TaskPageState extends State<TaskPage> {
             onPress: () {
 
               setState(() {
+                elapsedTime = stopwatch.elapsedMilliseconds;
                 if(flippedSquares[index] == false && index < 25){
+                  for (var i = 0; i < 25; i++){
+                    if (i == index) {
+                      pressTimes[index] = elapsedTime;
+                    }
+                    else {}
+                  }
+                  print(pressTimes);
                   pressCount++;
                   flippedSquares[index] = true;}
                 else if (index == 31) {
@@ -161,6 +172,7 @@ class _TaskPageState extends State<TaskPage> {
                   print(elapsedTime);
                   stopwatch.reset();
                   majorityChoice = 'yellow';
+                  createData(elapsedTime, gridMap, pressCount, pressTimes, now);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
                     resultText: getCorrectMajority(majorityChoice)),),);
                 }
@@ -170,6 +182,7 @@ class _TaskPageState extends State<TaskPage> {
                   print(elapsedTime);
                   stopwatch.reset();
                   majorityChoice = 'blue';
+                  createData(elapsedTime, gridMap, pressCount, pressTimes, now);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
                     resultText: getCorrectMajority(majorityChoice)), ),);
                 }
