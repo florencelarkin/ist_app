@@ -21,27 +21,30 @@ class _TaskPageState extends State<TaskPage> {
   Map<int, int> gridMap  = {0: 0, 1: 0, 2: 0, 3: 0, 4:0,5:0, 6: 0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0,
     13:0, 14:0, 15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 21:0, 22:0, 23:0, 24:0, 25:3, 26:3, 27:3,28:3, 29:3, 30:3, 31:1, 32:3, 33:2, 34:3};
 
-  Map<int, dynamic> pressTimes= {0:0, 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0, 11:0, 12:0, 13:0, 14:0, 15:0, 16:0, 17:0, 18:0, 19:0, 20:0, 21:0, 22:0,
-    23:0, 24:0};
+  Map<String, String> pressTimes= {'0':'0', '1':'0', '2':'0', '3':'0', '4':'0', '5':'0', '6':'0', '7':'0', '8':'0', '9':'0', '10':'0', '11':'0', '12':'0', '13':'0',
+    '14':'0', '15':'0', '16':'0', '17':'0', '18':'0', '19':'0', '20':'0', '21':'0', '22':'0', '23':'0'};
 
   int yellowCount = 0;
   int blueCount = 0;
   int pressCount = 0;
   String majorityChoice;
-  int elapsedTime = 0;
-  var now = new DateTime.now();
+  String elapsedTime = '0';
+  var now = new DateTime.now().toString();
+
+  List<String> pattern = [];
 
   List<bool> flippedSquares;
 
-  Future<http.Response> createData(int timeElapsed, Map pattern, int pressCount, Map pressTimes, dynamic date) async {
+  Future<http.Response> createData(String timeElapsed, List pattern, int pressCount, Map pressTimes, String date) async {
     return http.post(
-      'https://jsonplaceholder.typicode.com/albums',
+      'http://my-json-server.typicode.com/florencelarkin/ist_app/posts/',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, dynamic>{
         'experiment': 'IST',
-        'version' : '2.0',
+        'mode' : 'fixed win condition',
+        'version' : '1.0',
         'modality' : 'mobile',
         'subjID' : 'name',
         'study' : 'test',
@@ -66,6 +69,19 @@ class _TaskPageState extends State<TaskPage> {
         blueCount++;
       }
     }
+  }
+
+  List<String> createPatternList () {
+    for (var i = 0; i<25; i++) {
+      if (gridMap[i] == 1) {
+        pattern.add('y');
+      }
+      else if (gridMap[i] == 2){
+        pattern.add('b');
+      }
+      else {}
+    }
+    return pattern;
   }
 
   String getCorrectMajority(String majorityChoice) {
@@ -155,34 +171,33 @@ class _TaskPageState extends State<TaskPage> {
             onPress: () {
 
               setState(() {
-                elapsedTime = stopwatch.elapsedMilliseconds;
+                String elapsedTime = stopwatch.elapsedMilliseconds.toString();
                 if(flippedSquares[index] == false && index < 25){
                   for (var i = 0; i < 25; i++){
                     if (i == index) {
-                      pressTimes[index] = elapsedTime;
+                      pressTimes[index.toString()] = elapsedTime;
                     }
                     else {}
                   }
-                  print(pressTimes);
                   pressCount++;
                   flippedSquares[index] = true;}
                 else if (index == 31) {
                   stopwatch.stop();
-                  elapsedTime = stopwatch.elapsedMilliseconds;
-                  print(elapsedTime);
+                  elapsedTime = stopwatch.elapsedMilliseconds.toString();
                   stopwatch.reset();
                   majorityChoice = 'yellow';
-                  createData(elapsedTime, gridMap, pressCount, pressTimes, now);
+                  List<String> pattern = createPatternList();
+                  createData(elapsedTime, pattern, pressCount, pressTimes, now);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
                     resultText: getCorrectMajority(majorityChoice)),),);
                 }
                 else if (index == 33) {
                   stopwatch.stop();
-                  elapsedTime = stopwatch.elapsedMilliseconds;
-                  print(elapsedTime);
+                  elapsedTime = stopwatch.elapsedMilliseconds.toString();
                   stopwatch.reset();
                   majorityChoice = 'blue';
-                  createData(elapsedTime, gridMap, pressCount, pressTimes, now);
+                  List<String> pattern = createPatternList();
+                  createData(elapsedTime, pattern, pressCount, pressTimes, now);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResultPage(
                     resultText: getCorrectMajority(majorityChoice)), ),);
                 }
