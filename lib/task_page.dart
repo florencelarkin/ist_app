@@ -36,8 +36,8 @@ class _TaskPageState extends State<TaskPage> {
   List<bool> flippedSquares;
 
   Future<http.Response> createData(String timeElapsed, List pattern, int pressCount, Map pressTimes, String date) async {
-    return http.post(
-      'http://my-json-server.typicode.com/florencelarkin/ist_app/posts/',
+    final http.Response response = await http.post(
+      'https://jsonplaceholder.typicode.com/albums',
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -55,6 +55,7 @@ class _TaskPageState extends State<TaskPage> {
         'pressTimestamp' : pressTimes,
       }),
     );
+    return response;
   }
 
   void getSquareColor () {

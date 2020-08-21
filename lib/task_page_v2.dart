@@ -40,27 +40,29 @@ class _TaskPagev2State extends State<TaskPagev2> {
   List<bool> flippedSquares;
 
   Future<http.Response> createData(String timeElapsed, List pattern, int pressCount, Map pressTimes, String date, int points) async {
-    return http.post(
-      'http://my-json-server.typicode.com/florencelarkin/ist_app/posts/',
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'experiment': 'IST',
-        'version' : '1.0',
-        'mode' : 'decreasing points condition',
-        'modality' : 'mobile',
-        'subjID' : 'name',
-        'study' : 'test',
-        'date' : date,
-        'timeElapsed': timeElapsed,
-        'pattern': pattern,
-        'pressCount': pressCount,
-        'pressTimestamp' : pressTimes,
-        'points' : points
-      }),
-    );
-  }
+      final http.Response response = await http.post(
+        'https://jsonplaceholder.typicode.com/albums',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(<String, dynamic>{
+          'experiment': 'IST',
+          'mode' : 'fixed win condition',
+          'version' : '1.0',
+          'modality' : 'mobile',
+          'subjID' : 'name',
+          'study' : 'test',
+          'date' : date,
+          'timeElapsed': timeElapsed,
+          'pattern': pattern,
+          'pressCount': pressCount,
+          'pressTimestamp' : pressTimes,
+          'points': points
+        }),
+      );
+      return response;
+    }
+
 
   void getSquareColor () {
     for (var i = 0; i < 25; i++) {
