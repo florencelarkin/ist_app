@@ -139,10 +139,10 @@ class _TaskPageState extends State<TaskPage> {
       ),
       body: GridView.builder(
           physics: NeverScrollableScrollPhysics(),
-        itemCount: gridMap.length,
+          itemCount: gridMap.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 5),
-        itemBuilder: (context, index) {
+            itemBuilder: (context, index) {
             if (index < 25) {
               if (flippedSquares[index] == false) {
                 squareColor = Colors.grey;

@@ -34,7 +34,7 @@ class _InstructionsState extends State<Instructions> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              FlatButton(
+              ElevatedButton(
                 color: Colors.white,
                 child: Text(
                   'Version 1',
@@ -50,7 +50,7 @@ class _InstructionsState extends State<Instructions> {
                   });
               },
               ),
-              FlatButton(
+              ElevatedButton(
                 color: Colors.white,
                 child: Text(
                   'Version 2',
