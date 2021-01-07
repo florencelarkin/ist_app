@@ -12,7 +12,8 @@ class _InstructionsState extends State<Instructions> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Information Sampling Task Instructions'),),
+        title: Text('Information Sampling Task Instructions'),
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -35,7 +36,7 @@ class _InstructionsState extends State<Instructions> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               ElevatedButton(
-                color: Colors.white,
+                style: ElevatedButton.styleFrom(primary: Colors.white),
                 child: Text(
                   'Version 1',
                   style: TextStyle(
@@ -43,15 +44,19 @@ class _InstructionsState extends State<Instructions> {
                     color: Color(0xFF0A0E21),
                   ),
                 ),
-                padding: EdgeInsets.all(30.0),
                 onPressed: () {
                   setState(() {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPage(),),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TaskPage(),
+                      ),
+                    );
                   });
-              },
+                },
               ),
               ElevatedButton(
-                color: Colors.white,
+                style: ElevatedButton.styleFrom(primary: Colors.white),
                 child: Text(
                   'Version 2',
                   style: TextStyle(
@@ -59,10 +64,14 @@ class _InstructionsState extends State<Instructions> {
                     color: Color(0xFF0A0E21),
                   ),
                 ),
-                padding: EdgeInsets.all(30.0),
                 onPressed: () {
                   setState(() {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => TaskPagev2(),),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TaskPagev2(),
+                      ),
+                    );
                   });
                 },
               ),
