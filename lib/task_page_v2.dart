@@ -54,33 +54,6 @@ class _TaskPagev2State extends State<TaskPagev2> {
     34: 3
   };
 
-  Map<String, String> pressTimes = {
-    '0': '0',
-    '1': '0',
-    '2': '0',
-    '3': '0',
-    '4': '0',
-    '5': '0',
-    '6': '0',
-    '7': '0',
-    '8': '0',
-    '9': '0',
-    '10': '0',
-    '11': '0',
-    '12': '0',
-    '13': '0',
-    '14': '0',
-    '15': '0',
-    '16': '0',
-    '17': '0',
-    '18': '0',
-    '19': '0',
-    '20': '0',
-    '21': '0',
-    '22': '0',
-    '23': '0'
-  };
-
   int yellowCount = 0;
   int blueCount = 0;
   bool blueMajority;
@@ -91,7 +64,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
   int points = 250;
   Future<Data> _futureData;
   var uuid = Uuid();
-  List<String> pattern = [];
+  Map pattern = {};
   List dataList = ['version: 2'];
   Map pressMap = {};
 
@@ -128,12 +101,12 @@ class _TaskPagev2State extends State<TaskPagev2> {
     return dataList;
   }
 
-  List<String> createPatternList() {
+  Map createPatternList() {
     for (var i = 0; i < 25; i++) {
       if (gridMap[i] == 1) {
-        pattern.add('y');
+        pattern[i] = 'yellow';
       } else if (gridMap[i] == 2) {
-        pattern.add('b');
+        pattern[i] = 'blue';
       } else {}
     }
     return pattern;
@@ -214,17 +187,18 @@ class _TaskPagev2State extends State<TaskPagev2> {
               onPress: () {
                 setState(
                   () {
+                    points = points - 10;
                     String elapsedTime =
                         stopwatch.elapsedMilliseconds.toString();
                     if (flippedSquares[index] == false && index < 25) {
-                      pressMap[index] = elapsedTime;
-                      for (var i = 0; i < 25; i++) {
-                        if (i == index) {
-                          pressTimes[index.toString()] = elapsedTime;
-                        } else {}
+                      String squareColor;
+                      if (gridMap[index] == 1) {
+                        squareColor = 'blue';
+                      } else if (gridMap[index] == 2) {
+                        squareColor = 'yellow';
                       }
+                      pressMap[index] = [elapsedTime, squareColor, points];
                       pressCount++;
-                      points = points - 10;
                       flippedSquares[index] = true;
                     } else if (index == 31) {
                       String elapsedTime =
@@ -233,7 +207,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
                       stopwatch.stop();
                       stopwatch.reset();
                       majorityChoice = 'yellow';
-                      List<String> pattern = createPatternList();
+                      Map pattern = createPatternList();
                       String dataString = createDataList(
                               pattern, elapsedTime, majorityChoice, points)
                           .toString();
@@ -253,7 +227,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
                       stopwatch.stop();
                       stopwatch.reset();
                       majorityChoice = 'blue';
-                      List<String> pattern = createPatternList();
+                      Map pattern = createPatternList();
                       String dataString = createDataList(
                               pattern, elapsedTime, majorityChoice, points)
                           .toString();
