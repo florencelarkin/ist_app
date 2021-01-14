@@ -46,7 +46,6 @@ Future<Data> createData(
     data_version: data_version,
   );
   String jsonUser = jsonEncode(data);
-  print(jsonUser);
 
   final http.Response response = await http.post(
     'http://160.94.0.29:5000/posts',
