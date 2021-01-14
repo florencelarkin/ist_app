@@ -65,8 +65,8 @@ class _TaskPagev2State extends State<TaskPagev2> {
   Future<Data> _futureData;
   var uuid = Uuid();
   Map pattern = {};
-  List dataList = ['version: 2'];
-  Map pressMap = {};
+  Map dataMap = {'\"version\"': 2};
+  List movesList = [];
 
   List<bool> flippedSquares;
 
@@ -83,30 +83,20 @@ class _TaskPagev2State extends State<TaskPagev2> {
     }
   }
 
-  List createDataList(pattern, totalTime, majorityChoice, points) {
-    dataList.add(pattern);
-    dataList.add('total time: $totalTime');
-    String result = getCorrectMajority(majorityChoice);
-    if (majorityChoice == 'yellow') {
-      dataList.add('picked: yellow');
-    } else if (majorityChoice == 'blue') {
-      dataList.add('picked: blue');
-    } else {}
-    if (result == 'You win!') {
-      dataList.add('correct choice');
-    } else if (result == 'You lose') {
-      dataList.add('incorrect choice');
-    } else {}
-    dataList.add(points);
-    return dataList;
+  Map createDataList(pattern, totalTime, majorityChoice, points) {
+    dataMap['\"grid\"'] = pattern;
+    dataMap['\"total time\"'] = totalTime;
+    getCorrectMajority(majorityChoice);
+    dataMap['\"points\"'] = points;
+    return dataMap;
   }
 
   Map createPatternList() {
     for (var i = 0; i < 25; i++) {
       if (gridMap[i] == 1) {
-        pattern[i] = 'yellow';
+        pattern['\"$i\"'] = '\"yellow\"';
       } else if (gridMap[i] == 2) {
-        pattern[i] = 'blue';
+        pattern['\"$i\"'] = '\"blue\"';
       } else {}
     }
     return pattern;
@@ -115,21 +105,27 @@ class _TaskPagev2State extends State<TaskPagev2> {
   String getCorrectMajority(String majorityChoice) {
     String result;
     if (majorityChoice == 'yellow') {
+      dataMap['\"picked\"'] = '\"yellow\"';
       if (yellowCount > blueCount) {
+        dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
         points = points + 100;
         return result;
       } else {
+        dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
         points = points - 100;
         return result;
       }
     } else if (majorityChoice == 'blue') {
+      dataMap['\"picked\"'] = '\"blue\"';
       if (blueCount > yellowCount) {
+        dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
         points = points + 100;
         return result;
       } else {
+        dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
         points = points - 100;
         return result;
@@ -197,14 +193,13 @@ class _TaskPagev2State extends State<TaskPagev2> {
                       } else if (gridMap[index] == 2) {
                         squareColor = 'yellow';
                       }
-                      pressMap[index] = [elapsedTime, squareColor, points];
+                      movesList.add([index, elapsedTime, points]);
                       pressCount++;
                       flippedSquares[index] = true;
                     } else if (index == 31) {
-                      String elapsedTime =
-                          stopwatch.elapsedMilliseconds.toString();
-                      dataList.add(pressMap);
+                      dataMap['\"moves\"'] = movesList;
                       stopwatch.stop();
+                      elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'yellow';
                       Map pattern = createPatternList();
@@ -221,10 +216,9 @@ class _TaskPagev2State extends State<TaskPagev2> {
                         ),
                       );
                     } else if (index == 33) {
-                      String elapsedTime =
-                          stopwatch.elapsedMilliseconds.toString();
-                      dataList.add(pressMap);
+                      dataMap['\"moves\"'] = movesList;
                       stopwatch.stop();
+                      elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'blue';
                       Map pattern = createPatternList();

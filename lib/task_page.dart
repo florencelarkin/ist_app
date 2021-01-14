@@ -15,7 +15,7 @@ class _TaskPageState extends State<TaskPage> {
   var uuid = Uuid();
   Color squareColor;
   Future<Data> _futureData;
-  List dataList = ['version: 1'];
+  Map dataMap = {'\"version\"': 1};
   Stopwatch stopwatch = new Stopwatch()..start();
 
   Map<int, int> gridMap = {
@@ -61,7 +61,7 @@ class _TaskPageState extends State<TaskPage> {
   int pressCount = 0;
   String majorityChoice;
   String elapsedTime = '0';
-  Map pressMap = {};
+  List movesList = [];
   Map pattern = {};
 
   List<bool> flippedSquares;
@@ -79,30 +79,19 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
-  List createDataList(pattern, totalTime, majorityChoice) {
-    dataList.add(pattern);
-    dataList.add('total time: $totalTime');
-    String result = getCorrectMajority(majorityChoice);
-    if (majorityChoice == 'yellow') {
-      dataList.add('picked: yellow');
-    } else if (majorityChoice == 'blue') {
-      dataList.add('picked: blue');
-    } else {}
-    if (result == 'You win!') {
-      dataList.add('correct choice');
-    } else if (result == 'You lose') {
-      dataList.add('incorrect choice');
-    } else {}
-
-    return dataList;
+  Map createDataList(pattern, totalTime, majorityChoice) {
+    dataMap['\"grid\"'] = pattern;
+    dataMap['\"total time\"'] = totalTime;
+    getCorrectMajority(majorityChoice);
+    return dataMap;
   }
 
-  Map createPatternList() {
+  Map createGridMap() {
     for (var i = 0; i < 25; i++) {
       if (gridMap[i] == 1) {
-        pattern[i] = 'yellow';
+        pattern['\"$i\"'] = '\"yellow\"';
       } else if (gridMap[i] == 2) {
-        pattern[i] = 'blue';
+        pattern['\"$i\"'] = '\"blue\"';
       } else {}
     }
     return pattern;
@@ -111,20 +100,25 @@ class _TaskPageState extends State<TaskPage> {
   String getCorrectMajority(String majorityChoice) {
     String result;
     if (majorityChoice == 'yellow') {
+      dataMap['\"picked\"'] = '\"yellow\"';
       if (yellowCount > blueCount) {
+        dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
         return result;
       } else {
+        dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
         return result;
       }
     } else if (majorityChoice == 'blue') {
+      dataMap['\"picked\"'] = '\"blue\"';
       if (blueCount > yellowCount) {
+        dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
         return result;
       } else {
+        dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
-
         return result;
       }
     } else {
@@ -189,16 +183,16 @@ class _TaskPageState extends State<TaskPage> {
                       } else if (gridMap[index] == 2) {
                         squareColor = 'yellow';
                       }
-                      pressMap[index] = [elapsedTime, squareColor];
+                      movesList.add([index, elapsedTime]);
                       pressCount++;
                       flippedSquares[index] = true;
                     } else if (index == 31) {
-                      dataList.add(pressMap);
+                      dataMap['\"moves\"'] = movesList;
                       stopwatch.stop();
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'yellow';
-                      Map pattern = createPatternList();
+                      Map pattern = createGridMap();
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();
@@ -211,12 +205,12 @@ class _TaskPageState extends State<TaskPage> {
                         ),
                       );
                     } else if (index == 33) {
-                      dataList.add(pressMap);
+                      dataMap['\"moves\"'] = movesList;
                       stopwatch.stop();
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'blue';
-                      Map pattern = createPatternList();
+                      Map pattern = createGridMap();
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();

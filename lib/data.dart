@@ -46,7 +46,6 @@ Future<Data> createData(
     data_version: data_version,
   );
   String jsonUser = jsonEncode(data);
-  //String jsonUser = '{"studycode":"driving", "guid": "ab1235-x25", "data_version":"0.1", "data":"[[1,2,3], [4,5,6]]"}';
   print(jsonUser);
 
   final http.Response response = await http.post(
