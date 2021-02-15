@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'instruction_page.dart';
+import 'id_page.dart';
 
 void main() => runApp(IST());
 
@@ -11,9 +11,7 @@ class IST extends StatelessWidget {
         primaryColor: Color(0xFF0A0E21),
         scaffoldBackgroundColor: Color(0xFF0A0E21),
       ),
-      home: Instructions(),
+      home: SubjectIDPage(),
     );
   }
 }
-
-

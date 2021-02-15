@@ -3,11 +3,34 @@ import 'task_page.dart';
 import 'task_page_v2.dart';
 
 class Instructions extends StatefulWidget {
+  Instructions(
+      {@required this.subjectId,
+      @required this.uuid,
+      this.trialNumber,
+      this.blockNumber});
+  final String subjectId;
+  final String uuid;
+  final int trialNumber;
+  final int blockNumber;
   @override
-  _InstructionsState createState() => _InstructionsState();
+  _InstructionsState createState() => _InstructionsState(
+      subjectId: subjectId,
+      uuid: uuid,
+      trialNumber: trialNumber,
+      blockNumber: blockNumber);
 }
 
 class _InstructionsState extends State<Instructions> {
+  _InstructionsState(
+      {@required this.subjectId,
+      @required this.uuid,
+      this.trialNumber,
+      this.blockNumber});
+  String subjectId;
+  double maxVelocity;
+  String uuid;
+  int trialNumber;
+  int blockNumber;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +72,7 @@ class _InstructionsState extends State<Instructions> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TaskPage(),
+                        builder: (context) => TaskPage(subjectId: subjectId, uuid: uuid),
                       ),
                     );
                   });
@@ -69,7 +92,7 @@ class _InstructionsState extends State<Instructions> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TaskPagev2(),
+                        builder: (context) => TaskPagev2(subjectId: subjectId, uuid: uuid),
                       ),
                     );
                   });

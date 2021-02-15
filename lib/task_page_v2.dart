@@ -1,17 +1,41 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:istapp/result_page_v2.dart';
 import 'package:istapp/grid_square.dart';
 import 'dart:math';
 import 'dart:core';
 import 'data.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/foundation.dart';
 
 class TaskPagev2 extends StatefulWidget {
+  TaskPagev2(
+      {@required this.subjectId,
+      @required this.uuid,
+      this.trialNumber,
+      this.blockNumber});
+  final String subjectId;
+  final String uuid;
+  final int trialNumber;
+  final int blockNumber;
   @override
-  _TaskPagev2State createState() => _TaskPagev2State();
+  _TaskPagev2State createState() => _TaskPagev2State(
+      subjectId: subjectId,
+      uuid: uuid,
+      trialNumber: trialNumber,
+      blockNumber: blockNumber);
 }
 
 class _TaskPagev2State extends State<TaskPagev2> {
+  _TaskPagev2State(
+      {@required this.subjectId,
+      @required this.uuid,
+      this.trialNumber,
+      this.blockNumber});
+
+  String subjectId;
+  String uuid;
+  int trialNumber;
+  int blockNumber;
   Color squareColor;
 
   Stopwatch stopwatch = new Stopwatch()..start();
@@ -63,10 +87,10 @@ class _TaskPagev2State extends State<TaskPagev2> {
   String elapsedTime = '0';
   int points = 250;
   Future<Data> _futureData;
-  var uuid = Uuid();
   Map pattern = {};
   Map dataMap = {'\"version\"': 2};
   List movesList = [];
+  var startTime;
 
   List<bool> flippedSquares;
 
@@ -103,6 +127,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
   }
 
   String getCorrectMajority(String majorityChoice) {
+    dataMap['\"version\"'] = 2;
     String result;
     if (majorityChoice == 'yellow') {
       dataMap['\"picked\"'] = '\"yellow\"';
@@ -141,9 +166,51 @@ class _TaskPagev2State extends State<TaskPagev2> {
     });
   }
 
+  bool webFlag = false; // true if running web
+  String platformType = ""; // the platform: android, ios, windows, linux
+  final String taskVersion = "ist:0.1";
+
+  void checkWebPlatform() {
+    // check the platform and whether web
+
+    if (kIsWeb) {
+      webFlag = true;
+    } else {
+      webFlag = false;
+
+      platformType = Platform.operatingSystem;
+      // now check platform
+      /*
+      if(Platform.isAndroid) {
+        platformType = 'android';
+      } else if (Platform.isIOS) {
+        platformType = 'ios';
+      } else if (Platform.isLinux) {
+        platformType = 'linux';
+      } else if (Platform.isWindows) {
+        platformType = 'windows';
+      } else if (Platform.isMacOS) {
+        platformType = 'macos';
+      } else if (Platform.isFuchsia) {
+        platformType = 'fuchsia';
+      }
+       */
+    }
+  }
+
+  String addQuotesToString(String text) {
+    var quoteText = '\"' + text + '\"';
+    return quoteText;
+  }
+
   @override
   void initState() {
     super.initState();
+    startTime = new DateTime.now();
+    movesList.add([
+      '\"location\"',
+      '\"time\"',
+    ]);
     initList();
     getSquareColor();
   }
@@ -197,16 +264,30 @@ class _TaskPagev2State extends State<TaskPagev2> {
                       pressCount++;
                       flippedSquares[index] = true;
                     } else if (index == 31) {
-                      dataMap['\"moves\"'] = movesList;
+                      var endTime = new DateTime.now();
+                      dataMap[addQuotesToString("TaskVersion")] =
+                          addQuotesToString(taskVersion);
+                      dataMap[addQuotesToString("Platform")] =
+                          addQuotesToString(platformType);
+                      dataMap[addQuotesToString("Web")] = webFlag;
+                      //dataMap[addQuotesToString("DartVersion")] = addQuotesToString(Platform.version);
+                      // has double quoted android_ia32
+
+                      dataMap['\"SubjectID\"'] = addQuotesToString(subjectId);
+                      dataMap['\"StartTime\"'] =
+                          addQuotesToString(startTime.toIso8601String());
+                      dataMap['\"EndTime\"'] =
+                          addQuotesToString(endTime.toIso8601String());
+
+                      dataMap['\"Moves\"'] = movesList;
                       stopwatch.stop();
-                      elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'yellow';
                       Map pattern = createPatternList();
                       String dataString = createDataList(
                               pattern, elapsedTime, majorityChoice, points)
                           .toString();
-                      createData('IST', uuid.v1(), dataString, '0.1');
+                      createData('IST', uuid, dataString, '0.1');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -216,7 +297,21 @@ class _TaskPagev2State extends State<TaskPagev2> {
                         ),
                       );
                     } else if (index == 33) {
-                      dataMap['\"moves\"'] = movesList;
+                      var endTime = new DateTime.now();
+                      dataMap[addQuotesToString("TaskVersion")] =
+                          addQuotesToString(taskVersion);
+                      dataMap[addQuotesToString("Platform")] =
+                          addQuotesToString(platformType);
+                      dataMap[addQuotesToString("Web")] = webFlag;
+                      //dataMap[addQuotesToString("DartVersion")] = addQuotesToString(Platform.version);
+                      // has double quoted android_ia32
+
+                      dataMap['\"SubjectID\"'] = addQuotesToString(subjectId);
+                      dataMap['\"StartTime\"'] =
+                          addQuotesToString(startTime.toIso8601String());
+                      dataMap['\"EndTime\"'] =
+                          addQuotesToString(endTime.toIso8601String());
+                      dataMap['\"Moves\"'] = movesList;
                       stopwatch.stop();
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
@@ -225,7 +320,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
                       String dataString = createDataList(
                               pattern, elapsedTime, majorityChoice, points)
                           .toString();
-                      createData('IST', uuid.v1(), dataString, '0.1');
+                      createData('IST', uuid, dataString, '0.1');
                       Navigator.push(
                         context,
                         MaterialPageRoute(
