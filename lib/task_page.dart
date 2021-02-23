@@ -12,17 +12,20 @@ class TaskPage extends StatefulWidget {
       {@required this.subjectId,
       @required this.uuid,
       this.trialNumber,
-      this.blockNumber});
+      this.blockNumber,
+      this.versionNumber});
   final String subjectId;
   final String uuid;
   final int trialNumber;
   final int blockNumber;
+  final int versionNumber;
   @override
   _TaskPageState createState() => _TaskPageState(
       subjectId: subjectId,
       uuid: uuid,
       trialNumber: trialNumber,
-      blockNumber: blockNumber);
+      blockNumber: blockNumber,
+      versionNumber: versionNumber);
 }
 
 class _TaskPageState extends State<TaskPage> {
@@ -30,12 +33,14 @@ class _TaskPageState extends State<TaskPage> {
       {@required this.subjectId,
       @required this.uuid,
       this.trialNumber,
-      this.blockNumber});
+      this.blockNumber,
+      this.versionNumber});
 
   String subjectId;
   String uuid;
   int trialNumber;
   int blockNumber;
+  int versionNumber;
   Color squareColor;
   Future<Data> _futureData;
   Map dataMap = {'\"version\"': 1};
@@ -85,9 +90,10 @@ class _TaskPageState extends State<TaskPage> {
   String majorityChoice;
   String elapsedTime = '0';
   List movesList = [];
-  Map pattern = {};
+  List pattern = [];
   var startTime;
   List<bool> flippedSquares;
+  String appBarText = '';
 
   void getSquareColor() {
     for (var i = 0; i < 25; i++) {
@@ -102,19 +108,18 @@ class _TaskPageState extends State<TaskPage> {
     }
   }
 
-  Map createDataList(pattern, totalTime, majorityChoice) {
-    dataMap['\"grid\"'] = pattern;
-    dataMap['\"total time\"'] = totalTime;
+  List createDataList(pattern, totalTime, majorityChoice) {
+    movesList.add([totalTime]);
     getCorrectMajority(majorityChoice);
-    return dataMap;
+    return movesList;
   }
 
-  Map createGridMap() {
+  List createGridList() {
     for (var i = 0; i < 25; i++) {
       if (gridMap[i] == 1) {
-        pattern['\"$i\"'] = '\"yellow\"';
+        pattern.add('\"0\"');
       } else if (gridMap[i] == 2) {
-        pattern['\"$i\"'] = '\"blue\"';
+        pattern.add('\"1\"');
       } else {}
     }
     return pattern;
@@ -124,24 +129,24 @@ class _TaskPageState extends State<TaskPage> {
     String result;
 
     if (majorityChoice == 'yellow') {
-      dataMap['\"picked\"'] = '\"yellow\"';
+      movesList.add(['\"0\"']);
       if (yellowCount > blueCount) {
-        dataMap['\"answer\"'] = '\"correct\"';
+        movesList.add(['\"correct\"']);
         result = 'You win!';
         return result;
       } else {
-        dataMap['\"answer\"'] = '\"incorrect\"';
+        movesList.add(['\"incorrect\"']);
         result = 'You lose';
         return result;
       }
     } else if (majorityChoice == 'blue') {
-      dataMap['\"picked\"'] = '\"blue\"';
+      movesList.add(['\"1\"']);
       if (blueCount > yellowCount) {
-        dataMap['\"answer\"'] = '\"correct\"';
+        movesList.add(['\"correct\"']);
         result = 'You win!';
         return result;
       } else {
-        dataMap['\"answer\"'] = '\"incorrect\"';
+        movesList.add(['\"incorrect\"']);
         result = 'You lose';
         return result;
       }
@@ -202,6 +207,10 @@ class _TaskPageState extends State<TaskPage> {
     movesList.add([
       '\"location\"',
       '\"time\"',
+      '\"pattern\"',
+      '\"total time\"',
+      '\"picked\"',
+      '\"answer\"'
     ]);
   }
 
@@ -209,7 +218,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(''),
+        title: Text(appBarText),
       ),
       body: GridView.builder(
           physics: NeverScrollableScrollPhysics(),
@@ -273,7 +282,8 @@ class _TaskPageState extends State<TaskPage> {
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'yellow';
-                      Map pattern = createGridMap();
+                      List pattern = createGridList();
+                      movesList.add(pattern);
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();
@@ -306,7 +316,8 @@ class _TaskPageState extends State<TaskPage> {
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'blue';
-                      Map pattern = createGridMap();
+                      List pattern = createGridList();
+                      movesList.add(pattern);
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();

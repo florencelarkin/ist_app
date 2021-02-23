@@ -7,6 +7,8 @@ import 'dart:core';
 import 'data.dart';
 import 'package:flutter/foundation.dart';
 
+//
+
 class TaskPagev2 extends StatefulWidget {
   TaskPagev2(
       {@required this.subjectId,
@@ -109,7 +111,7 @@ class _TaskPagev2State extends State<TaskPagev2> {
 
   Map createDataList(pattern, totalTime, majorityChoice, points) {
     dataMap['\"grid\"'] = pattern;
-    dataMap['\"total time\"'] = totalTime;
+    dataMap['\"totalTime\"'] = totalTime;
     getCorrectMajority(majorityChoice);
     dataMap['\"points\"'] = points;
     return dataMap;
