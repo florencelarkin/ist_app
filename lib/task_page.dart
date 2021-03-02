@@ -109,8 +109,8 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Map createDataList(pattern, totalTime, majorityChoice) {
-    dataMap['\"pattern:\"'] = pattern;
-    dataMap['\"totalTime:\"'] = totalTime;
+    dataMap['\"pattern\"'] = pattern;
+    dataMap['\"totalTime\"'] = totalTime;
     getCorrectMajority(majorityChoice);
     return dataMap;
   }
@@ -130,24 +130,24 @@ class _TaskPageState extends State<TaskPage> {
     String result;
 
     if (majorityChoice == 'yellow') {
-      dataMap['\"picked:\"'] = 0;
+      dataMap['\"picked\"'] = 0;
       if (yellowCount > blueCount) {
-        dataMap['\"answer:\"'] = '\"correct\"';
+        dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
         return result;
       } else {
-        dataMap['\"answer:\"'] = '\"incorrect\"';
+        dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
         return result;
       }
     } else if (majorityChoice == 'blue') {
-      dataMap['\"picked:\"'] = 1;
+      dataMap['\"picked\"'] = 1;
       if (blueCount > yellowCount) {
-        dataMap['\"answer:\"'] = '\"correct\"';
+        dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
         return result;
       } else {
-        dataMap['\"answer:\"'] = '\"incorrect\"';
+        dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
         return result;
       }
