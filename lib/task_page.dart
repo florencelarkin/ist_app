@@ -215,7 +215,7 @@ class _TaskPageState extends State<TaskPage> {
         title: Text(appBarText),
       ),
       body: GridView.builder(
-          physics: NeverScrollableScrollPhysics(),
+          //physics: NeverScrollableScrollPhysics(),
           itemCount: gridMap.length,
           gridDelegate:
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),

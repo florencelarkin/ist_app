@@ -43,34 +43,40 @@ class _SubjectIDPageState extends State<SubjectIDPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Text(
-                'Please enter subject ID:',
-                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                heightFactor: MediaQuery.of(context).size.height * .1,
+                child: Text(
+                  'Please enter Subject ID:',
+                  style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
           ),
-          Container(
-            child: TextField(
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
-                  ),
-                  hintText: 'Enter Subject ID'),
-              onChanged: (value) {
-                subjectId = value;
-              },
+          Expanded(
+            child: Container(
+              child: TextField(
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                    ),
+                    hintText: 'Enter Subject ID'),
+                onChanged: (value) {
+                  subjectId = value;
+                },
+              ),
+              height: MediaQuery.of(context).size.height * 0.25,
+              width: MediaQuery.of(context).size.width * 0.75,
             ),
-            height: MediaQuery.of(context).size.width * 0.25,
-            width: MediaQuery.of(context).size.width * 0.75,
           ),
           SizedBox(
-            height: 100.0,
+            height: MediaQuery.of(context).size.height * .1,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               RaisedButton(
                   color: Colors.blue,
@@ -100,6 +106,9 @@ class _SubjectIDPageState extends State<SubjectIDPage> {
                     }
                   }),
             ],
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * .2,
           ),
         ],
       ),
