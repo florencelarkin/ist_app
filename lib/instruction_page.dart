@@ -31,6 +31,7 @@ class _InstructionsState extends State<Instructions> {
   String uuid;
   int trialNumber;
   int blockNumber;
+  int versionNumber;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +54,7 @@ class _InstructionsState extends State<Instructions> {
             ),
           ),
           SizedBox(
-            height: 100.0,
+            height: MediaQuery.of(context).size.height * .1,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -69,10 +70,15 @@ class _InstructionsState extends State<Instructions> {
                 ),
                 onPressed: () {
                   setState(() {
+                    versionNumber = 1;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TaskPage(subjectId: subjectId, uuid: uuid),
+                        builder: (context) => TaskPage(
+                          subjectId: subjectId,
+                          uuid: uuid,
+                          versionNumber: versionNumber,
+                        ),
                       ),
                     );
                   });
@@ -89,10 +95,15 @@ class _InstructionsState extends State<Instructions> {
                 ),
                 onPressed: () {
                   setState(() {
+                    versionNumber = 2;
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TaskPagev2(subjectId: subjectId, uuid: uuid),
+                        builder: (context) => TaskPage(
+                          subjectId: subjectId,
+                          uuid: uuid,
+                          versionNumber: versionNumber,
+                        ),
                       ),
                     );
                   });
