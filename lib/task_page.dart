@@ -73,15 +73,15 @@ class _TaskPageState extends State<TaskPage> {
     23: 0,
     24: 0,
     25: 3,
-    26: 3,
+    26: 1,
     27: 3,
-    28: 3,
+    28: 2,
     29: 3,
-    30: 3,
+    /*30: 3,
     31: 1,
     32: 3,
     33: 2,
-    34: 3
+    34: 3,*/
   };
 
   int yellowCount = 0;
@@ -94,6 +94,7 @@ class _TaskPageState extends State<TaskPage> {
   var startTime;
   List<bool> flippedSquares;
   String appBarText = '';
+  int points = 250;
 
   void getSquareColor() {
     for (var i = 0; i < 25; i++) {
@@ -109,6 +110,7 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Map createDataList(pattern, totalTime, majorityChoice) {
+    dataMap['\"version\"'] = versionNumber;
     dataMap['\"pattern\"'] = pattern;
     dataMap['\"totalTime\"'] = totalTime;
     getCorrectMajority(majorityChoice);
@@ -134,10 +136,12 @@ class _TaskPageState extends State<TaskPage> {
       if (yellowCount > blueCount) {
         dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
+        points = points + 100;
         return result;
       } else {
         dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
+        points = points - 100;
         return result;
       }
     } else if (majorityChoice == 'blue') {
@@ -145,10 +149,12 @@ class _TaskPageState extends State<TaskPage> {
       if (blueCount > yellowCount) {
         dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
+        points = points + 100;
         return result;
       } else {
         dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
+        points = points - 100;
         return result;
       }
     } else {
@@ -212,7 +218,8 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(appBarText),
+        title:
+            (versionNumber == 1) ? Text(appBarText) : Text('Points: $points'),
       ),
       body: GridView.builder(
           //physics: NeverScrollableScrollPhysics(),
@@ -243,6 +250,7 @@ class _TaskPageState extends State<TaskPage> {
               onPress: () {
                 setState(
                   () {
+                    points = points - 10;
                     String elapsedTime =
                         stopwatch.elapsedMilliseconds.toString();
                     if (flippedSquares[index] == false && index < 25) {
@@ -255,7 +263,7 @@ class _TaskPageState extends State<TaskPage> {
                       movesList.add([index, elapsedTime]);
                       pressCount++;
                       flippedSquares[index] = true;
-                    } else if (index == 31) {
+                    } else if (index == 26) {
                       var endTime = new DateTime.now();
                       dataMap[addQuotesToString("TaskVersion")] =
                           addQuotesToString(taskVersion);
@@ -288,7 +296,7 @@ class _TaskPageState extends State<TaskPage> {
                               resultText: getCorrectMajority(majorityChoice)),
                         ),
                       );
-                    } else if (index == 33) {
+                    } else if (index == 28) {
                       var endTime = new DateTime.now();
                       dataMap[addQuotesToString("TaskVersion")] =
                           addQuotesToString(taskVersion);
