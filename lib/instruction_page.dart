@@ -1,37 +1,42 @@
 import 'package:flutter/material.dart';
 import 'task_page.dart';
-import 'task_page_v2.dart';
+//import 'task_page_v2.dart';
 
 class Instructions extends StatefulWidget {
   Instructions(
       {@required this.subjectId,
       @required this.uuid,
       this.trialNumber,
-      this.blockNumber});
+      this.blockNumber, this.versionNumber,});
   final String subjectId;
   final String uuid;
   final int trialNumber;
   final int blockNumber;
+  final int versionNumber;
+
   @override
   _InstructionsState createState() => _InstructionsState(
       subjectId: subjectId,
       uuid: uuid,
       trialNumber: trialNumber,
-      blockNumber: blockNumber);
+      blockNumber: blockNumber, versionNumber: versionNumber,);
 }
 
 class _InstructionsState extends State<Instructions> {
-  _InstructionsState(
-      {@required this.subjectId,
-      @required this.uuid,
-      this.trialNumber,
-      this.blockNumber});
+  _InstructionsState({
+    @required this.subjectId,
+    @required this.uuid,
+    this.trialNumber,
+    this.blockNumber, this.versionNumber,
+  });
   String subjectId;
-  double maxVelocity;
   String uuid;
   int trialNumber;
-  int blockNumber;
+  int blockNumber = 1;
   int versionNumber;
+  int currentPoints;
+  int wins = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +67,7 @@ class _InstructionsState extends State<Instructions> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.white),
                 child: Text(
-                  'Version 1',
+                  'Fixed Win',
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Color(0xFF0A0E21),
@@ -70,6 +75,8 @@ class _InstructionsState extends State<Instructions> {
                 ),
                 onPressed: () {
                   setState(() {
+                    currentPoints = 0;
+                    trialNumber = 1;
                     versionNumber = 1;
                     Navigator.push(
                       context,
@@ -78,6 +85,10 @@ class _InstructionsState extends State<Instructions> {
                           subjectId: subjectId,
                           uuid: uuid,
                           versionNumber: versionNumber,
+                          currentPoints: currentPoints,
+                          wins: wins,
+                          trialNumber: trialNumber,
+                          blockNumber: blockNumber,
                         ),
                       ),
                     );
@@ -87,7 +98,7 @@ class _InstructionsState extends State<Instructions> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(primary: Colors.white),
                 child: Text(
-                  'Version 2',
+                  'Decreasing Win',
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Color(0xFF0A0E21),
@@ -95,6 +106,8 @@ class _InstructionsState extends State<Instructions> {
                 ),
                 onPressed: () {
                   setState(() {
+                    currentPoints = 250;
+                    trialNumber = 1;
                     versionNumber = 2;
                     Navigator.push(
                       context,
@@ -103,6 +116,10 @@ class _InstructionsState extends State<Instructions> {
                           subjectId: subjectId,
                           uuid: uuid,
                           versionNumber: versionNumber,
+                          trialNumber: trialNumber,
+                          blockNumber: blockNumber,
+                          currentPoints: currentPoints,
+                          wins: wins,
                         ),
                       ),
                     );

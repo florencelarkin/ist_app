@@ -6,41 +6,55 @@ import 'dart:core';
 import 'data.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'completed_page.dart';
 
 class TaskPage extends StatefulWidget {
-  TaskPage(
-      {@required this.subjectId,
-      @required this.uuid,
-      this.trialNumber,
-      this.blockNumber,
-      this.versionNumber});
+  TaskPage({
+    @required this.subjectId,
+    @required this.uuid,
+    this.trialNumber,
+    this.blockNumber,
+    this.versionNumber,
+    this.currentPoints,
+    this.wins,
+  });
   final String subjectId;
   final String uuid;
   final int trialNumber;
   final int blockNumber;
   final int versionNumber;
+  final int currentPoints;
+  final int wins;
+
   @override
   _TaskPageState createState() => _TaskPageState(
       subjectId: subjectId,
       uuid: uuid,
       trialNumber: trialNumber,
       blockNumber: blockNumber,
-      versionNumber: versionNumber);
+      versionNumber: versionNumber,
+      currentPoints: currentPoints,
+      wins: wins);
 }
 
 class _TaskPageState extends State<TaskPage> {
-  _TaskPageState(
-      {@required this.subjectId,
-      @required this.uuid,
-      this.trialNumber,
-      this.blockNumber,
-      this.versionNumber});
+  _TaskPageState({
+    @required this.subjectId,
+    @required this.uuid,
+    this.trialNumber,
+    this.blockNumber,
+    this.versionNumber,
+    this.currentPoints,
+    this.wins,
+  });
 
   String subjectId;
   String uuid;
   int trialNumber;
   int blockNumber;
   int versionNumber;
+  int currentPoints;
+  int wins;
   Color squareColor;
   Future<Data> _futureData;
   Map dataMap = {'\"version\"': 1};
@@ -130,18 +144,18 @@ class _TaskPageState extends State<TaskPage> {
 
   String getCorrectMajority(String majorityChoice) {
     String result;
-
     if (majorityChoice == 'yellow') {
       dataMap['\"picked\"'] = 0;
       if (yellowCount > blueCount) {
         dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
-        points = points + 100;
+        currentPoints = currentPoints + 50;
+        wins++;
         return result;
       } else {
         dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
-        points = points - 100;
+        currentPoints = currentPoints - 50;
         return result;
       }
     } else if (majorityChoice == 'blue') {
@@ -149,12 +163,13 @@ class _TaskPageState extends State<TaskPage> {
       if (blueCount > yellowCount) {
         dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
-        points = points + 100;
+        wins++;
+        currentPoints = currentPoints + 50;
         return result;
       } else {
         dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
-        points = points - 100;
+        currentPoints = currentPoints - 50;
         return result;
       }
     } else {
@@ -218,8 +233,7 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            (versionNumber == 1) ? Text(appBarText) : Text('Points: $points'),
+        title: Text('Points: $currentPoints'),
       ),
       body: GridView.builder(
           //physics: NeverScrollableScrollPhysics(),
@@ -250,7 +264,9 @@ class _TaskPageState extends State<TaskPage> {
               onPress: () {
                 setState(
                   () {
-                    points = points - 10;
+                    versionNumber == 2
+                        ? currentPoints = currentPoints - 10
+                        : currentPoints = currentPoints;
                     String elapsedTime =
                         stopwatch.elapsedMilliseconds.toString();
                     if (flippedSquares[index] == false && index < 25) {
@@ -278,7 +294,9 @@ class _TaskPageState extends State<TaskPage> {
                           addQuotesToString(startTime.toIso8601String());
                       dataMap['\"EndTime\"'] =
                           addQuotesToString(endTime.toIso8601String());
-
+                      dataMap['\"TrialNumber\"'] = trialNumber;
+                      dataMap['\"TotalWins\"'] = wins;
+                      dataMap['\"Points\"'] = currentPoints;
                       dataMap['\"Moves\"'] = movesList;
                       stopwatch.stop();
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
@@ -289,13 +307,29 @@ class _TaskPageState extends State<TaskPage> {
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();
                       createData('IST', uuid, dataString, '0.1');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ResultPage(
-                              resultText: getCorrectMajority(majorityChoice)),
-                        ),
-                      );
+                      trialNumber != 20 && trialNumber != null
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultPage(
+                                  resultText:
+                                      getCorrectMajority(majorityChoice),
+                                  subjectId: subjectId,
+                                  trialNumber: trialNumber,
+                                  blockNumber: blockNumber,
+                                  versionNumber: versionNumber,
+                                  uuid: uuid,
+                                  wins: wins,
+                                  currentPoints: currentPoints,
+                                ),
+                              ),
+                            )
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CompletedPage(),
+                              ),
+                            );
                     } else if (index == 28) {
                       var endTime = new DateTime.now();
                       dataMap[addQuotesToString("TaskVersion")] =
@@ -311,7 +345,9 @@ class _TaskPageState extends State<TaskPage> {
                           addQuotesToString(startTime.toIso8601String());
                       dataMap['\"EndTime\"'] =
                           addQuotesToString(endTime.toIso8601String());
-
+                      dataMap['\"TrialNumber\"'] = trialNumber;
+                      dataMap['\"TotalWins\"'] = wins;
+                      dataMap['\"Points\"'] = currentPoints;
                       dataMap['\"Moves\"'] = movesList;
                       stopwatch.stop();
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
@@ -322,13 +358,29 @@ class _TaskPageState extends State<TaskPage> {
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();
                       createData('IST', uuid, dataString, '0.1');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ResultPage(
-                              resultText: getCorrectMajority(majorityChoice)),
-                        ),
-                      );
+                      trialNumber != 20 && trialNumber != null
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultPage(
+                                  resultText:
+                                      getCorrectMajority(majorityChoice),
+                                  subjectId: subjectId,
+                                  trialNumber: trialNumber,
+                                  blockNumber: blockNumber,
+                                  versionNumber: versionNumber,
+                                  uuid: uuid,
+                                  wins: wins,
+                                  currentPoints: currentPoints,
+                                ),
+                              ),
+                            )
+                          : Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => CompletedPage(),
+                              ),
+                            );
                     } else {}
                   },
                 );

@@ -3,11 +3,16 @@ import 'instruction_page.dart';
 import 'package:uuid/uuid.dart';
 
 class SubjectIDPage extends StatefulWidget {
+  SubjectIDPage({this.versionNumber});
+  final int versionNumber;
   @override
-  _SubjectIDPageState createState() => _SubjectIDPageState();
+  _SubjectIDPageState createState() =>
+      _SubjectIDPageState(versionNumber: versionNumber);
 }
 
 class _SubjectIDPageState extends State<SubjectIDPage> {
+  _SubjectIDPageState({this.versionNumber});
+  int versionNumber;
   var uuid = Uuid();
   String subjectId;
   int trialNumber = 0;
@@ -15,7 +20,7 @@ class _SubjectIDPageState extends State<SubjectIDPage> {
 
   showAlertDialog(BuildContext context) {
     // set up the button
-    Widget okButton = FlatButton(
+    Widget okButton = ElevatedButton(
       child: Text('OK'),
       onPressed: () {
         Navigator.pop(context);
@@ -78,14 +83,12 @@ class _SubjectIDPageState extends State<SubjectIDPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              RaisedButton(
-                  color: Colors.blue,
+              ElevatedButton(
                   child: Text('BACK'),
                   onPressed: () {
                     Navigator.pop(context);
                   }),
-              RaisedButton(
-                  color: Colors.green,
+              ElevatedButton(
                   child: Text('NEXT'),
                   onPressed: () {
                     if (subjectId == null) {
@@ -100,6 +103,7 @@ class _SubjectIDPageState extends State<SubjectIDPage> {
                             uuid: newId,
                             trialNumber: trialNumber,
                             blockNumber: blockNumber,
+                            versionNumber: versionNumber,
                           ),
                         ),
                       );
