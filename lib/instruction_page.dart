@@ -3,11 +3,13 @@ import 'task_page.dart';
 //import 'task_page_v2.dart';
 
 class Instructions extends StatefulWidget {
-  Instructions(
-      {@required this.subjectId,
-      @required this.uuid,
-      this.trialNumber,
-      this.blockNumber, this.versionNumber,});
+  Instructions({
+    @required this.subjectId,
+    @required this.uuid,
+    this.trialNumber,
+    this.blockNumber,
+    this.versionNumber,
+  });
   final String subjectId;
   final String uuid;
   final int trialNumber;
@@ -16,10 +18,12 @@ class Instructions extends StatefulWidget {
 
   @override
   _InstructionsState createState() => _InstructionsState(
-      subjectId: subjectId,
-      uuid: uuid,
-      trialNumber: trialNumber,
-      blockNumber: blockNumber, versionNumber: versionNumber,);
+        subjectId: subjectId,
+        uuid: uuid,
+        trialNumber: trialNumber,
+        blockNumber: blockNumber,
+        versionNumber: versionNumber,
+      );
 }
 
 class _InstructionsState extends State<Instructions> {
@@ -27,14 +31,15 @@ class _InstructionsState extends State<Instructions> {
     @required this.subjectId,
     @required this.uuid,
     this.trialNumber,
-    this.blockNumber, this.versionNumber,
+    this.blockNumber,
+    this.versionNumber,
   });
   String subjectId;
   String uuid;
   int trialNumber;
   int blockNumber = 1;
   int versionNumber;
-  int currentPoints;
+  int currentPoints = 0;
   int wins = 0;
 
   @override
@@ -75,7 +80,7 @@ class _InstructionsState extends State<Instructions> {
                 ),
                 onPressed: () {
                   setState(() {
-                    currentPoints = 0;
+                    //currentPoints = 0;
                     trialNumber = 1;
                     versionNumber = 1;
                     Navigator.push(
@@ -106,7 +111,7 @@ class _InstructionsState extends State<Instructions> {
                 ),
                 onPressed: () {
                   setState(() {
-                    currentPoints = 250;
+                    //currentPoints = 250;
                     trialNumber = 1;
                     versionNumber = 2;
                     Navigator.push(

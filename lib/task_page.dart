@@ -108,7 +108,7 @@ class _TaskPageState extends State<TaskPage> {
   var startTime;
   List<bool> flippedSquares;
   String appBarText = '';
-  int points = 250;
+  int potentialWin = 250;
 
   void getSquareColor() {
     for (var i = 0; i < 25; i++) {
@@ -149,7 +149,9 @@ class _TaskPageState extends State<TaskPage> {
       if (yellowCount > blueCount) {
         dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
-        currentPoints = currentPoints + 50;
+        versionNumber == 1
+            ? currentPoints = currentPoints + 50
+            : currentPoints = currentPoints + potentialWin;
         wins++;
         return result;
       } else {
@@ -164,7 +166,9 @@ class _TaskPageState extends State<TaskPage> {
         dataMap['\"answer\"'] = '\"correct\"';
         result = 'You win!';
         wins++;
-        currentPoints = currentPoints + 50;
+        versionNumber == 1
+            ? currentPoints = currentPoints + 50
+            : currentPoints = currentPoints + potentialWin;
         return result;
       } else {
         dataMap['\"answer\"'] = '\"incorrect\"';
@@ -233,8 +237,11 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Points: $currentPoints'),
-      ),
+          title: versionNumber == 1
+              ? Text(
+                  'Fixed Win - Points: $currentPoints, Lose: -100, Win: +100, Trial: $trialNumber/20')
+              : Text(
+                  'Decreasing Win - Points: $currentPoints, Lose: -100, Win: +$potentialWin, Trial $trialNumber/20')),
       body: GridView.builder(
           //physics: NeverScrollableScrollPhysics(),
           itemCount: gridMap.length,
@@ -264,12 +271,10 @@ class _TaskPageState extends State<TaskPage> {
               onPress: () {
                 setState(
                   () {
-                    versionNumber == 2
-                        ? currentPoints = currentPoints - 10
-                        : currentPoints = currentPoints;
                     String elapsedTime =
                         stopwatch.elapsedMilliseconds.toString();
                     if (flippedSquares[index] == false && index < 25) {
+                      potentialWin = potentialWin - 10;
                       String squareColor;
                       if (gridMap[index] == 1) {
                         squareColor = 'blue';
@@ -302,6 +307,7 @@ class _TaskPageState extends State<TaskPage> {
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'yellow';
+                      potentialWin = potentialWin ~/ 2;
                       List pattern = createGridList();
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)
@@ -353,6 +359,7 @@ class _TaskPageState extends State<TaskPage> {
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
                       majorityChoice = 'blue';
+                      potentialWin = potentialWin ~/ 2;
                       List pattern = createGridList();
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)

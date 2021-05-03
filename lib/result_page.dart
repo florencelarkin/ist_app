@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:istapp/task_page.dart';
+import 'switch_page.dart';
 
 class ResultPage extends StatefulWidget {
   ResultPage({
@@ -105,14 +106,11 @@ class _ResultPageState extends State<ResultPage> {
                     ? versionNumber = 2
                     : versionNumber =
                         1; //switch versions to opposite condition for next 10 trials
-                versionNumber == 1
-                    ? currentPoints = 0
-                    : currentPoints =
-                        250; //reset points to 0 for fw and 250 for dw
+                currentPoints = 0; //reset points to 0
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => TaskPage(
+                    builder: (context) => BlockPage(
                       versionNumber: versionNumber,
                       subjectId: subjectId,
                       blockNumber: blockNumber,
