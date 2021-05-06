@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:istapp/task_page.dart';
 import 'switch_page.dart';
+import 'completed_page.dart';
+import 'dart:async';
 
 class ResultPage extends StatefulWidget {
   ResultPage({
@@ -56,6 +58,8 @@ class _ResultPageState extends State<ResultPage> {
   int versionNumber;
   int currentPoints;
 
+  Timer continueTimer;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,35 +111,48 @@ class _ResultPageState extends State<ResultPage> {
                     : versionNumber =
                         1; //switch versions to opposite condition for next 10 trials
                 currentPoints = 0; //reset points to 0
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BlockPage(
-                      versionNumber: versionNumber,
-                      subjectId: subjectId,
-                      blockNumber: blockNumber,
-                      trialNumber: trialNumber,
-                      uuid: uuid,
-                      currentPoints: currentPoints,
-                      wins: wins,
+                continueTimer = Timer(Duration(seconds: 2), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BlockPage(
+                        versionNumber: versionNumber,
+                        subjectId: subjectId,
+                        blockNumber: blockNumber,
+                        trialNumber: trialNumber,
+                        uuid: uuid,
+                        currentPoints: currentPoints,
+                        wins: wins,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                });
+              } else if (trialNumber == 20) {
+                continueTimer = Timer(Duration(seconds: 2), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CompletedPage(),
+                    ),
+                  );
+                });
               } else {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TaskPage(
-                      versionNumber: versionNumber,
-                      subjectId: subjectId,
-                      blockNumber: blockNumber,
-                      trialNumber: trialNumber,
-                      uuid: uuid,
-                      currentPoints: currentPoints,
-                      wins: wins,
+                continueTimer = Timer(Duration(seconds: 2), () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TaskPage(
+                        versionNumber: versionNumber,
+                        subjectId: subjectId,
+                        blockNumber: blockNumber,
+                        trialNumber: trialNumber,
+                        uuid: uuid,
+                        currentPoints: currentPoints,
+                        wins: wins,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                });
               } //add subject id and version
             },
           ),

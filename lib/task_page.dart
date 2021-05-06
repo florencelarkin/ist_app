@@ -6,7 +6,9 @@ import 'dart:core';
 import 'data.dart';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'completed_page.dart';
+import 'dart:async';
+
+//add popup if data doesn't go through
 
 class TaskPage extends StatefulWidget {
   TaskPage({
@@ -55,9 +57,10 @@ class _TaskPageState extends State<TaskPage> {
   int versionNumber;
   int currentPoints;
   int wins;
+  String versionText;
   Color squareColor;
   Future<Data> _futureData;
-  Map dataMap = {'\"version\"': 1};
+  Map dataMap = {};
   Stopwatch stopwatch = new Stopwatch()..start();
 
   Map<int, int> gridMap = {
@@ -109,6 +112,8 @@ class _TaskPageState extends State<TaskPage> {
   List<bool> flippedSquares;
   String appBarText = '';
   int potentialWin = 250;
+  int end = 0;
+  Timer revealTimer;
 
   void getSquareColor() {
     for (var i = 0; i < 25; i++) {
@@ -124,7 +129,12 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   Map createDataList(pattern, totalTime, majorityChoice) {
-    dataMap['\"version\"'] = versionNumber;
+    if (versionNumber == 1) {
+      versionText = '\"Fixed Win\"';
+    } else {
+      versionText = '\"Decreasing Win\"';
+    }
+    dataMap['\"mode\"'] = versionText;
     dataMap['\"pattern\"'] = pattern;
     dataMap['\"totalTime\"'] = totalTime;
     getCorrectMajority(majorityChoice);
@@ -153,11 +163,15 @@ class _TaskPageState extends State<TaskPage> {
             ? currentPoints = currentPoints + 50
             : currentPoints = currentPoints + potentialWin;
         wins++;
+        dataMap['\"TotalWins\"'] = wins;
+        dataMap['\"Points\"'] = currentPoints;
         return result;
       } else {
         dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
         currentPoints = currentPoints - 50;
+        dataMap['\"TotalWins\"'] = wins;
+        dataMap['\"Points\"'] = currentPoints;
         return result;
       }
     } else if (majorityChoice == 'blue') {
@@ -169,11 +183,15 @@ class _TaskPageState extends State<TaskPage> {
         versionNumber == 1
             ? currentPoints = currentPoints + 50
             : currentPoints = currentPoints + potentialWin;
+        dataMap['\"TotalWins\"'] = wins;
+        dataMap['\"Points\"'] = currentPoints;
         return result;
       } else {
         dataMap['\"answer\"'] = '\"incorrect\"';
         result = 'You lose';
         currentPoints = currentPoints - 50;
+        dataMap['\"TotalWins\"'] = wins;
+        dataMap['\"Points\"'] = currentPoints;
         return result;
       }
     } else {
@@ -241,7 +259,7 @@ class _TaskPageState extends State<TaskPage> {
               ? Text(
                   'Fixed Win - Points: $currentPoints, Lose: -100, Win: +100, Trial: $trialNumber/20')
               : Text(
-                  'Decreasing Win - Points: $currentPoints, Lose: -100, Win: +$potentialWin, Trial $trialNumber/20')),
+                  'Decreasing Win - Points: $currentPoints, Lose: -100, Win: +$potentialWin, Trial: $trialNumber/20')),
       body: GridView.builder(
           //physics: NeverScrollableScrollPhysics(),
           itemCount: gridMap.length,
@@ -284,7 +302,18 @@ class _TaskPageState extends State<TaskPage> {
                       movesList.add([index, elapsedTime]);
                       pressCount++;
                       flippedSquares[index] = true;
-                    } else if (index == 26) {
+                    } else if (index == 26 || index == 28) {
+                      setState(() {
+                        for (bool i in flippedSquares) {
+                          flippedSquares[end] = true;
+                          if (gridMap[end] == 1) {
+                            squareColor = Colors.yellow;
+                          } else if (gridMap[end] == 2) {
+                            squareColor = Colors.blue;
+                          }
+                          end++;
+                        }
+                      });
                       var endTime = new DateTime.now();
                       dataMap[addQuotesToString("TaskVersion")] =
                           addQuotesToString(taskVersion);
@@ -300,94 +329,39 @@ class _TaskPageState extends State<TaskPage> {
                       dataMap['\"EndTime\"'] =
                           addQuotesToString(endTime.toIso8601String());
                       dataMap['\"TrialNumber\"'] = trialNumber;
-                      dataMap['\"TotalWins\"'] = wins;
-                      dataMap['\"Points\"'] = currentPoints;
                       dataMap['\"Moves\"'] = movesList;
                       stopwatch.stop();
                       elapsedTime = stopwatch.elapsedMilliseconds.toString();
                       stopwatch.reset();
-                      majorityChoice = 'yellow';
+                      index == 26
+                          ? majorityChoice = 'yellow'
+                          : majorityChoice = 'blue';
                       potentialWin = potentialWin ~/ 2;
                       List pattern = createGridList();
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();
                       createData('IST', uuid, dataString, '0.1');
-                      trialNumber != 20 && trialNumber != null
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ResultPage(
-                                  resultText:
-                                      getCorrectMajority(majorityChoice),
-                                  subjectId: subjectId,
-                                  trialNumber: trialNumber,
-                                  blockNumber: blockNumber,
-                                  versionNumber: versionNumber,
-                                  uuid: uuid,
-                                  wins: wins,
-                                  currentPoints: currentPoints,
+                      revealTimer = Timer(Duration(seconds: 2), () {
+                        trialNumber != null
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ResultPage(
+                                    resultText:
+                                        getCorrectMajority(majorityChoice),
+                                    subjectId: subjectId,
+                                    trialNumber: trialNumber,
+                                    blockNumber: blockNumber,
+                                    versionNumber: versionNumber,
+                                    uuid: uuid,
+                                    wins: wins,
+                                    currentPoints: currentPoints,
+                                  ),
                                 ),
-                              ),
-                            )
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CompletedPage(),
-                              ),
-                            );
-                    } else if (index == 28) {
-                      var endTime = new DateTime.now();
-                      dataMap[addQuotesToString("TaskVersion")] =
-                          addQuotesToString(taskVersion);
-                      dataMap[addQuotesToString("Platform")] =
-                          addQuotesToString(platformType);
-                      dataMap[addQuotesToString("Web")] = webFlag;
-                      //dataMap[addQuotesToString("DartVersion")] = addQuotesToString(Platform.version);
-                      // has double quoted android_ia32
-
-                      dataMap['\"SubjectID\"'] = addQuotesToString(subjectId);
-                      dataMap['\"StartTime\"'] =
-                          addQuotesToString(startTime.toIso8601String());
-                      dataMap['\"EndTime\"'] =
-                          addQuotesToString(endTime.toIso8601String());
-                      dataMap['\"TrialNumber\"'] = trialNumber;
-                      dataMap['\"TotalWins\"'] = wins;
-                      dataMap['\"Points\"'] = currentPoints;
-                      dataMap['\"Moves\"'] = movesList;
-                      stopwatch.stop();
-                      elapsedTime = stopwatch.elapsedMilliseconds.toString();
-                      stopwatch.reset();
-                      majorityChoice = 'blue';
-                      potentialWin = potentialWin ~/ 2;
-                      List pattern = createGridList();
-                      String dataString =
-                          createDataList(pattern, elapsedTime, majorityChoice)
-                              .toString();
-                      createData('IST', uuid, dataString, '0.1');
-                      trialNumber != 20 && trialNumber != null
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ResultPage(
-                                  resultText:
-                                      getCorrectMajority(majorityChoice),
-                                  subjectId: subjectId,
-                                  trialNumber: trialNumber,
-                                  blockNumber: blockNumber,
-                                  versionNumber: versionNumber,
-                                  uuid: uuid,
-                                  wins: wins,
-                                  currentPoints: currentPoints,
-                                ),
-                              ),
-                            )
-                          : Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CompletedPage(),
-                              ),
-                            );
+                              )
+                            : print('error:(');
+                      });
                     } else {}
                   },
                 );
