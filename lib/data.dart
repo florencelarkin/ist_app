@@ -3,6 +3,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'dart:async';
 import 'dart:convert';
 
+String serverURL = 'https://x0-29.psych.umn.edu/dend/posts';
+
 @JsonSerializable(nullable: false)
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data(
@@ -37,7 +39,7 @@ class Data {
   Map<String, dynamic> toJson() => _$DataToJson(this);
 }
 
-Future<Data> createData(
+Future<bool> createData(
     String studycode, String guid, String dataList, String data_version) async {
   Data data = Data(
     studycode: studycode,
@@ -48,7 +50,7 @@ Future<Data> createData(
   String jsonUser = jsonEncode(data);
 
   final http.Response response = await http.post(
-    'https://x0-29.psych.umn.edu/dend/posts',
+    serverURL,
     headers: <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
     },
@@ -56,8 +58,9 @@ Future<Data> createData(
   );
 
   if (response.statusCode == 200) {
-    return Data.fromJson(jsonDecode(response.body));
+    Data.fromJson(jsonDecode(response.body));
+    return Future.value(true);
   } else {
-    throw Exception('Failed to create data.');
+    return Future.value(false);
   }
 }

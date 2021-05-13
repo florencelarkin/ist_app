@@ -37,7 +37,7 @@ class ResultPage extends StatefulWidget {
       currentPoints: currentPoints);
 }
 
-class _ResultPageState extends State<ResultPage> {
+class _ResultPageState extends State<ResultPage> with TickerProviderStateMixin {
   _ResultPageState({
     @required this.resultText,
     this.wins,
@@ -57,8 +57,20 @@ class _ResultPageState extends State<ResultPage> {
   int blockNumber;
   int versionNumber;
   int currentPoints;
+  bool timerDone = false;
 
   Timer continueTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    continueTimer = Timer(Duration(seconds: 2), () {
+      setState(() {
+        timerDone = true;
+      });
+      print('im done');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,23 +107,25 @@ class _ResultPageState extends State<ResultPage> {
               ),
             ),
           ),
-          ElevatedButton(
-            child: Text(
-              'NEXT TRIAL',
-              style: TextStyle(
-                fontSize: 25.0,
-                color: Color(0xFF0A0E21),
+          Visibility(
+            visible: timerDone == true ? true : false,
+            child: ElevatedButton(
+              child: Text(
+                'NEXT TRIAL',
+                style: TextStyle(
+                  fontSize: 25.0,
+                  color: Color(0xFF0A0E21),
+                ),
               ),
-            ),
-            onPressed: () {
-              trialNumber++;
-              if (trialNumber == 11) {
-                versionNumber == 1
-                    ? versionNumber = 2
-                    : versionNumber =
-                        1; //switch versions to opposite condition for next 10 trials
-                currentPoints = 0; //reset points to 0
-                continueTimer = Timer(Duration(seconds: 2), () {
+              onPressed: () {
+                trialNumber++;
+                if (trialNumber == 11) {
+                  versionNumber == 1
+                      ? versionNumber = 2
+                      : versionNumber =
+                          1; //switch versions to opposite condition for next 10 trials
+                  currentPoints = 0; //reset points to 0
+
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -126,18 +140,14 @@ class _ResultPageState extends State<ResultPage> {
                       ),
                     ),
                   );
-                });
-              } else if (trialNumber == 20) {
-                continueTimer = Timer(Duration(seconds: 2), () {
+                } else if (trialNumber == 20) {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => CompletedPage(),
                     ),
                   );
-                });
-              } else {
-                continueTimer = Timer(Duration(seconds: 2), () {
+                } else {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -152,9 +162,9 @@ class _ResultPageState extends State<ResultPage> {
                       ),
                     ),
                   );
-                });
-              } //add subject id and version
-            },
+                } //add subject id and version
+              },
+            ),
           ),
           SizedBox(
             height: 150.0,

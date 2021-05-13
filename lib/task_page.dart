@@ -8,8 +8,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
 
-//add popup if data doesn't go through
-
 class TaskPage extends StatefulWidget {
   TaskPage({
     @required this.subjectId,
@@ -62,6 +60,45 @@ class _TaskPageState extends State<TaskPage> {
   Future<Data> _futureData;
   Map dataMap = {};
   Stopwatch stopwatch = new Stopwatch()..start();
+  String title = '';
+  String messageText = '';
+
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = ElevatedButton(
+      child: Text('CONTINUE ANYWAY?'),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultPage(
+              resultText: getCorrectMajority(majorityChoice),
+              subjectId: subjectId,
+              trialNumber: trialNumber,
+              blockNumber: blockNumber,
+              versionNumber: versionNumber,
+              uuid: uuid,
+              wins: wins,
+              currentPoints: currentPoints,
+            ),
+          ),
+        );
+      },
+    );
+    AlertDialog alert = AlertDialog(
+      title: Text("$title"),
+      content: Text("$messageText"),
+      actions: [
+        okButton,
+      ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   Map<int, int> gridMap = {
     0: 0,
@@ -114,6 +151,7 @@ class _TaskPageState extends State<TaskPage> {
   int potentialWin = 250;
   int end = 0;
   Timer revealTimer;
+  Timer serverTimeout;
 
   void getSquareColor() {
     for (var i = 0; i < 25; i++) {
@@ -196,6 +234,37 @@ class _TaskPageState extends State<TaskPage> {
       }
     } else {
       return null;
+    }
+  }
+
+  _serverUpload(studycode, guid, dataList, data_version) async {
+    print('i made it');
+    bool dataSent = await createData(studycode, guid, dataList, data_version);
+    if (dataSent == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(
+            resultText: getCorrectMajority(majorityChoice),
+            subjectId: subjectId,
+            trialNumber: trialNumber,
+            blockNumber: blockNumber,
+            versionNumber: versionNumber,
+            uuid: uuid,
+            wins: wins,
+            currentPoints: currentPoints,
+          ),
+        ),
+      );
+    } else if (dataSent == false) {
+      title = 'Server Error';
+      messageText = 'Your data has not been uploaded to the server.';
+      showAlertDialog(context);
+    } else {
+      print('you are here.');
+      title = 'Server Timeout';
+      messageText =
+          'Your data has not been uploaded because the server took too long to connect.';
     }
   }
 
@@ -341,26 +410,16 @@ class _TaskPageState extends State<TaskPage> {
                       String dataString =
                           createDataList(pattern, elapsedTime, majorityChoice)
                               .toString();
-                      createData('IST', uuid, dataString, '0.1');
+
                       revealTimer = Timer(Duration(seconds: 2), () {
                         trialNumber != null
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ResultPage(
-                                    resultText:
-                                        getCorrectMajority(majorityChoice),
-                                    subjectId: subjectId,
-                                    trialNumber: trialNumber,
-                                    blockNumber: blockNumber,
-                                    versionNumber: versionNumber,
-                                    uuid: uuid,
-                                    wins: wins,
-                                    currentPoints: currentPoints,
-                                  ),
-                                ),
-                              )
+                            ? _serverUpload('IST', uuid, dataString, '0.1')
                             : print('error:(');
+                      });
+                      serverTimeout = Timer(Duration(seconds: 20), () {
+                        title = 'Error! Server timeout.';
+                        messageText = 'The server took too long to connect.';
+                        showAlertDialog(context);
                       });
                     } else {}
                   },
