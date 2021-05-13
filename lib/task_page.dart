@@ -152,6 +152,7 @@ class _TaskPageState extends State<TaskPage> {
   int end = 0;
   Timer revealTimer;
   Timer serverTimeout;
+  bool timeoutCheck = false;
 
   void getSquareColor() {
     for (var i = 0; i < 25; i++) {
@@ -238,7 +239,6 @@ class _TaskPageState extends State<TaskPage> {
   }
 
   _serverUpload(studycode, guid, dataList, data_version) async {
-    print('i made it');
     bool dataSent = await createData(studycode, guid, dataList, data_version);
     if (dataSent == true) {
       Navigator.push(
@@ -260,11 +260,10 @@ class _TaskPageState extends State<TaskPage> {
       title = 'Server Error';
       messageText = 'Your data has not been uploaded to the server.';
       showAlertDialog(context);
-    } else {
-      print('you are here.');
-      title = 'Server Timeout';
-      messageText =
-          'Your data has not been uploaded because the server took too long to connect.';
+    } else if (timeoutCheck == true) {
+      title = 'Error! Server timeout.';
+      messageText = 'The server took too long to connect.';
+      showAlertDialog(context);
     }
   }
 
@@ -417,6 +416,7 @@ class _TaskPageState extends State<TaskPage> {
                             : print('error:(');
                       });
                       serverTimeout = Timer(Duration(seconds: 20), () {
+                        timeoutCheck = true;
                         title = 'Error! Server timeout.';
                         messageText = 'The server took too long to connect.';
                         showAlertDialog(context);
