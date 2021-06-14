@@ -323,11 +323,16 @@ class _TaskPageState extends State<TaskPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: versionNumber == 1
-              ? Text(
-                  'Fixed Win - Points: $currentPoints, Lose: -100, Win: +100, Trial: $trialNumber/20')
-              : Text(
-                  'Decreasing Win - Points: $currentPoints, Lose: -100, Win: +$potentialWin, Trial: $trialNumber/20')),
+        title: versionNumber == 1
+            ? Text(
+                'Fixed Win - Points: $currentPoints, Lose: -100, Win: +100, Trial: $trialNumber/20',
+                style: TextStyle(fontSize: 10.0),
+              )
+            : Text(
+                'Decreasing Win - Points: $currentPoints, Lose: -100, Win: +$potentialWin, Trial: $trialNumber/20',
+                style: TextStyle(fontSize: 10.0),
+              ),
+      ),
       body: GridView.builder(
           //physics: NeverScrollableScrollPhysics(),
           itemCount: gridMap.length,
