@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'instruction_page.dart';
 import 'package:uuid/uuid.dart';
+import 'fixed_inst.dart';
+import 'decreasing_inst.dart';
 
 class SubjectIDPage extends StatefulWidget {
   SubjectIDPage({this.versionNumber});
@@ -84,29 +86,39 @@ class _SubjectIDPageState extends State<SubjectIDPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               ElevatedButton(
-                  child: Text('BACK'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  }),
-              ElevatedButton(
                   child: Text('NEXT'),
                   onPressed: () {
                     if (subjectId == null) {
                       showAlertDialog(context);
                     } else {
                       String newId = uuid.v1();
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Instructions(
-                            subjectId: subjectId,
-                            uuid: newId,
-                            trialNumber: trialNumber,
-                            blockNumber: blockNumber,
-                            versionNumber: versionNumber,
+                      if (versionNumber == 1) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FixedWinInst(
+                              subjectId: subjectId,
+                              uuid: newId,
+                              trialNumber: trialNumber,
+                              blockNumber: blockNumber,
+                              versionNumber: versionNumber,
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DecreasingWinInst(
+                              subjectId: subjectId,
+                              uuid: newId,
+                              trialNumber: trialNumber,
+                              blockNumber: blockNumber,
+                              versionNumber: versionNumber,
+                            ),
+                          ),
+                        );
+                      }
                     }
                   }),
             ],

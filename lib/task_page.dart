@@ -57,7 +57,7 @@ class _TaskPageState extends State<TaskPage> {
   int wins;
   String versionText;
   Color squareColor;
-  Future<Data> _futureData;
+  //Future<Data> _futureData;
   Map dataMap = {};
   Stopwatch stopwatch = new Stopwatch()..start();
   String title = '';
@@ -66,23 +66,9 @@ class _TaskPageState extends State<TaskPage> {
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = ElevatedButton(
-      child: Text('CONTINUE ANYWAY?'),
+      child: Text('OK'),
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResultPage(
-              resultText: getCorrectMajority(majorityChoice),
-              subjectId: subjectId,
-              trialNumber: trialNumber,
-              blockNumber: blockNumber,
-              versionNumber: versionNumber,
-              uuid: uuid,
-              wins: wins,
-              currentPoints: currentPoints,
-            ),
-          ),
-        );
+        Navigator.pop(context);
       },
     );
     AlertDialog alert = AlertDialog(
@@ -151,7 +137,7 @@ class _TaskPageState extends State<TaskPage> {
   int potentialWin = 250;
   int end = 0;
   Timer revealTimer;
-  Timer serverTimeout;
+
   bool timeoutCheck = false;
 
   void getSquareColor() {
@@ -241,6 +227,7 @@ class _TaskPageState extends State<TaskPage> {
   _serverUpload(studycode, guid, dataList, data_version) async {
     bool dataSent = await createData(studycode, guid, dataList, data_version);
     if (dataSent == true) {
+      print('sent');
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -257,13 +244,45 @@ class _TaskPageState extends State<TaskPage> {
         ),
       );
     } else if (dataSent == false) {
+      print('error');
       title = 'Server Error';
       messageText = 'Your data has not been uploaded to the server.';
       showAlertDialog(context);
-    } else if (timeoutCheck == true) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(
+            resultText: getCorrectMajority(majorityChoice),
+            subjectId: subjectId,
+            trialNumber: trialNumber,
+            blockNumber: blockNumber,
+            versionNumber: versionNumber,
+            uuid: uuid,
+            wins: wins,
+            currentPoints: currentPoints,
+          ),
+        ),
+      );
+    } else {
+      print('timeout');
       title = 'Error! Server timeout.';
       messageText = 'The server took too long to connect.';
       showAlertDialog(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResultPage(
+            resultText: getCorrectMajority(majorityChoice),
+            subjectId: subjectId,
+            trialNumber: trialNumber,
+            blockNumber: blockNumber,
+            versionNumber: versionNumber,
+            uuid: uuid,
+            wins: wins,
+            currentPoints: currentPoints,
+          ),
+        ),
+      );
     }
   }
 
@@ -419,12 +438,6 @@ class _TaskPageState extends State<TaskPage> {
                         trialNumber != null
                             ? _serverUpload('IST', uuid, dataString, '0.1')
                             : print('error:(');
-                      });
-                      serverTimeout = Timer(Duration(seconds: 20), () {
-                        timeoutCheck = true;
-                        title = 'Error! Server timeout.';
-                        messageText = 'The server took too long to connect.';
-                        showAlertDialog(context);
                       });
                     } else {}
                   },

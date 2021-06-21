@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'task_page.dart';
+import 'fixed_inst.dart';
+import 'decreasing_inst.dart';
 
 class BlockPage extends StatefulWidget {
   BlockPage({
@@ -101,20 +102,33 @@ class _BlockPageState extends State<BlockPage> {
             onPressed: () {
               blockNumber++;
               currentPoints = 0;
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TaskPage(
-                    uuid: uuid,
-                    subjectId: subjectId,
-                    trialNumber: trialNumber,
-                    blockNumber: blockNumber,
-                    wins: wins,
-                    versionNumber: versionNumber,
-                    currentPoints: currentPoints,
+              if (versionNumber == 1) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FixedWinInst(
+                      subjectId: subjectId,
+                      uuid: uuid,
+                      trialNumber: trialNumber,
+                      blockNumber: blockNumber,
+                      versionNumber: versionNumber,
+                    ),
                   ),
-                ),
-              );
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DecreasingWinInst(
+                      subjectId: subjectId,
+                      uuid: uuid,
+                      trialNumber: trialNumber,
+                      blockNumber: blockNumber,
+                      versionNumber: versionNumber,
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ],

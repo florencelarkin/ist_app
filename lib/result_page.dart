@@ -68,7 +68,6 @@ class _ResultPageState extends State<ResultPage> with TickerProviderStateMixin {
       setState(() {
         timerDone = true;
       });
-      print('im done');
     });
   }
 
